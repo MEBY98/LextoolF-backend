@@ -2,76 +2,50 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
-type User {
-  _id: ID!
-  email: String!
+type ProjectType {
+  id: ID!
   name: String!
-  description: String
-  imgProfile: String
+  letters: [String!]!
 }
 
-type UserToken {
-  user: User!
-  token: String!
-  expiresIn: Int!
+type DescriptorType {
+  id: ID!
+  projectID: String!
+  description: String!
+  father: String!
+  type: String!
+  reference: String!
+  descriptorsChild: [DescriptorType!]!
 }
 
-type RefreshToken {
-  refreshToken: String!
-  expiresIn: Int!
-}
-
-type Pagination {
-  totalElements: Int!
-  hasNextPage: Boolean!
-  lastPage: Int!
-  nextPage: Int!
-  previousPage: Int!
-}
-
-type Element {
-  _id: ID!
-  name: String!
-}
-
-type ManyElements {
-  pagination: Pagination!
-  elements: [Element!]!
+type CreatedDescriptorType {
+  id: ID!
+  projectID: String!
+  description: String!
+  father: String
+  type: String
+  reference: String
 }
 
 type Query {
-  login(input: LoginInputDto!): UserToken!
-  getElements: ManyElements!
-}
-
-input LoginInputDto {
-  email: String!
-  password: String!
+  getAllProjects: [ProjectType!]!
+  getAllDescriptors: [DescriptorType!]!
 }
 
 type Mutation {
-  registerUser(input: CreateUserInput!): JSON!
-  refreshToken: RefreshToken!
-  createDictionary(input: CreateDictionaryInput!): JSON!
-  createElement(input: CreateElementInput!): JSON!
+  createProject(project: NewProjectType!): ProjectType!
+  createDescriptor(descriptor: NewDescriptorType!): CreatedDescriptorType!
 }
 
-"""
-The `JSON` scalar type represents JSON values as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf).
-"""
-scalar JSON @specifiedBy(url: "http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf")
-
-input CreateUserInput {
-  email: String!
+input NewProjectType {
   name: String!
-  password: String!
-}
-
-input CreateDictionaryInput {
   letters: [String!]!
-  name: String!
 }
 
-input CreateElementInput {
-  name: String!
+input NewDescriptorType {
+  description: String!
+  type: String
+  father: String
+  reference: String
+  projectID: String!
 }
