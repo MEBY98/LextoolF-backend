@@ -1,17 +1,18 @@
 import { Module } from '@nestjs/common';
 import { GraphQLModule } from '@nestjs/graphql';
-import { ProjectModule } from './project/project.module';
+import { FraseograficStudyModule } from './fraseograficStudy/fraseograficStudy.module';
 import { MongooseModule } from '@nestjs/mongoose';
 import { DescriptorModule } from './descriptor/descriptor.module';
-
-
+import { EntryModule } from './entry/entry.module';
+import { DictionaryModule } from './dictionary/dictionary.module';
 
 @Module({
   imports: [
-    MongooseModule.forRoot('mongodb://localhost/Dictionary'),
+    MongooseModule.forRoot('mongodb://localhost/Dictionary', {
+      useFindAndModify: false,
+    }),
     GraphQLModule.forRoot({ autoSchemaFile: 'schema.gql' }),
-    ProjectModule,
-    DescriptorModule
-  ],  
+    FraseograficStudyModule,
+  ],
 })
-export class AppModule { }
+export class AppModule {}

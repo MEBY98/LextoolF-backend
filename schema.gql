@@ -2,9 +2,76 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
-type ProjectType {
+type UFtype {
+  id: ID!
+  UF: String!
+}
+
+type EntryType {
+  id: ID!
+  letter: String!
+  context: String!
+  lemma: String
+  UFs: [UFtype!]!
+}
+
+type CreatedEntryType {
+  id: ID!
+  letter: String!
+  context: String!
+  lemma: String
+  UFs: [UFtype!]!
+}
+
+type fraseograficStudyType {
   id: ID!
   name: String!
+  shortName: String!
+  period: String!
+  dictionaries: [DictionaryTypeWithoutEntries!]!
+}
+
+type CreatedfraseograficStudyType {
+  id: ID!
+  name: String!
+  shortName: String!
+  period: String!
+  dictionaries: [String!]!
+}
+
+type AuthorType {
+  name: String!
+  siglas: String!
+}
+
+type DictionaryType {
+  id: ID!
+  name: String!
+  shortName: String!
+  author: [AuthorType!]!
+  annoOfPublication: Float!
+  reference: String!
+  letters: [String!]!
+  entries: [EntryType!]!
+}
+
+type DictionaryTypeWithoutEntries {
+  id: ID!
+  name: String!
+  shortName: String!
+  author: [AuthorType!]!
+  annoOfPublication: Float!
+  reference: String!
+  letters: [String!]!
+}
+
+type CreatedDictionaryType {
+  id: ID!
+  name: String!
+  shortName: String!
+  author: [AuthorType!]!
+  annoOfPublication: Float!
+  reference: String!
   letters: [String!]!
 }
 
@@ -12,9 +79,9 @@ type DescriptorType {
   id: ID!
   projectID: String!
   description: String!
-  father: String!
-  type: String!
-  reference: String!
+  father: String
+  root: String
+  reference: String
   descriptorsChild: [DescriptorType!]!
 }
 
@@ -23,23 +90,77 @@ type CreatedDescriptorType {
   projectID: String!
   description: String!
   father: String
-  type: String
+  root: String
   reference: String
 }
 
 type Query {
-  getAllProjects: [ProjectType!]!
+  getAllStudies: [fraseograficStudyType!]!
+  getStudyByID(studyID: String!): fraseograficStudyType!
+  getAllDictionaries: [DictionaryType!]!
+  getDictionaryByID(dictionaryID: String!): DictionaryType!
+  getAllEntries: [EntryType!]!
   getAllDescriptors: [DescriptorType!]!
 }
 
 type Mutation {
-  createProject(project: NewProjectType!): ProjectType!
+  createStudy(fraseograficStudy: NewfraseograficStudyType!): CreatedfraseograficStudyType!
+  deleteStudyByID(studyID: String!): fraseograficStudyType!
+  createDictionaryByStudyID(studyID: String!, newDictionary: NewDictionaryType!): CreatedDictionaryType!
+  editStudy(newStudy: EditfraseograficStudyType!): fraseograficStudyType!
+  createEntryByDictionaryID(dictionaryID: String!, newEntry: NewEntryType!): EntryType!
+  createEntry(entry: NewEntryType!): CreatedEntryType!
   createDescriptor(descriptor: NewDescriptorType!): CreatedDescriptorType!
 }
 
-input NewProjectType {
+input NewfraseograficStudyType {
   name: String!
+  shortName: String!
+  dictionaries: [NewDictionaryType!]
+}
+
+input NewDictionaryType {
+  name: String!
+  shortName: String!
+  author: [NewAuthorType!]!
+  annoOfPublication: Float!
+  reference: String!
   letters: [String!]!
+}
+
+input NewAuthorType {
+  name: String!
+  siglas: String!
+}
+
+input EditfraseograficStudyType {
+  id: ID!
+  name: String!
+  shortName: String!
+  period: String!
+  dictionaries: [EditDictionaryTypeWithoutEntries!]!
+}
+
+input EditDictionaryTypeWithoutEntries {
+  id: ID
+  name: String!
+  shortName: String!
+  author: [NewAuthorType!]!
+  annoOfPublication: Float!
+  reference: String!
+  letters: [String!]!
+}
+
+input NewEntryType {
+  letter: String!
+  context: String!
+  lemma: String
+  UFs: [NewUFtype!]
+}
+
+input NewUFtype {
+  UF: String!
+  clasifications: [String!]!
 }
 
 input NewDescriptorType {
