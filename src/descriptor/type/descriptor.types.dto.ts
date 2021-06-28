@@ -31,8 +31,6 @@ export class DescriptorWithoutChildsType {
   readonly father: string;
   @Field({ nullable: true })
   readonly root: string;
-  @Field({ nullable: true })
-  readonly reference: string;
 }
 
 @ObjectType()
@@ -47,8 +45,6 @@ export class CreatedDescriptorType {
   readonly father: string;
   @Field({ nullable: true })
   readonly root: String;
-  @Field({ nullable: true })
-  readonly reference: string;
 }
 
 @InputType()
@@ -59,8 +55,6 @@ export class NewDescriptorType {
   readonly type: string;
   @Field({ nullable: true })
   readonly father: string;
-  @Field({ nullable: true })
-  readonly reference: string;
   @Field()
   readonly projectID: string;
 }

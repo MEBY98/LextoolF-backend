@@ -61,11 +61,10 @@ export class FraseograficStudyService {
   async createStudy(
     study: NewfraseograficStudyType,
   ): Promise<CreatedfraseograficStudyType> {
-    const { name, dictionaries, shortName } = study;
+    const { name, dictionaries } = study;
     let dictionariesIds: String[] = [];
     let studyModel = new this.fraseograficStudyModel({
       name,
-      shortName,
       dictionaries: dictionariesIds,
     });
     dictionaries.forEach(d => {
@@ -138,7 +137,6 @@ export class FraseograficStudyService {
     );
     if (oldStudy) {
       oldStudy.name = newStudy.name;
-      oldStudy.shortName = newStudy.shortName;
       console.log('oldStudy:', oldStudy);
       console.log('newDictionaries:', newDictionaries);
       oldStudy.dictionaries.forEach(oD => {
@@ -227,7 +225,6 @@ export class FraseograficStudyService {
     const s = new this.fraseograficStudyModel({
       _id: study.id,
       name: study.name,
-      shortName: study.shortName,
       period: study.period,
       dictionaries: dictionariesID,
     });

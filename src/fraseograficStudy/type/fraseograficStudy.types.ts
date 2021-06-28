@@ -13,8 +13,6 @@ export class fraseograficStudyType {
   @Field()
   name: string;
   @Field()
-  shortName: string;
-  @Field()
   period: string;
   @Field(type => [DictionaryTypeWithoutEntries])
   dictionaries: [DictionaryTypeWithoutEntries];
@@ -27,8 +25,6 @@ export class CreatedfraseograficStudyType {
   @Field()
   name: string;
   @Field()
-  shortName: string;
-  @Field()
   period: string;
   @Field(type => [String])
   dictionaries: String[];
@@ -39,7 +35,7 @@ export class NewfraseograficStudyType {
   @Field()
   readonly name: string;
   @Field()
-  readonly shortName: string;
+  readonly period: string;
   @Field(type => [NewDictionaryType], { nullable: true })
   readonly dictionaries: NewDictionaryType[];
 }
@@ -50,8 +46,6 @@ export class EditfraseograficStudyType {
   id?: string;
   @Field()
   name: string;
-  @Field()
-  shortName: string;
   @Field()
   period: string;
   @Field(type => [EditDictionaryTypeWithoutEntries])

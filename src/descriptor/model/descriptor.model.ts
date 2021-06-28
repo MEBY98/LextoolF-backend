@@ -13,11 +13,6 @@ export const DescriptorSchema = new mongoose.Schema({
     default: null,
     ref: 'Descriptor',
   },
-  reference: {
-    type: String,
-    required: false,
-    default: null,
-  },
   projectID: {
     type: mongoose.Schema.Types.ObjectId,
     required: true,

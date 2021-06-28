@@ -26,7 +26,6 @@ type CreatedEntryType {
 type fraseograficStudyType {
   id: ID!
   name: String!
-  shortName: String!
   period: String!
   dictionaries: [DictionaryTypeWithoutEntries!]!
 }
@@ -34,7 +33,6 @@ type fraseograficStudyType {
 type CreatedfraseograficStudyType {
   id: ID!
   name: String!
-  shortName: String!
   period: String!
   dictionaries: [String!]!
 }
@@ -91,7 +89,6 @@ type CreatedDescriptorType {
   description: String!
   father: String
   root: String
-  reference: String
 }
 
 type Query {
@@ -115,7 +112,7 @@ type Mutation {
 
 input NewfraseograficStudyType {
   name: String!
-  shortName: String!
+  period: String!
   dictionaries: [NewDictionaryType!]
 }
 
@@ -136,7 +133,6 @@ input NewAuthorType {
 input EditfraseograficStudyType {
   id: ID!
   name: String!
-  shortName: String!
   period: String!
   dictionaries: [EditDictionaryTypeWithoutEntries!]!
 }
@@ -167,6 +163,5 @@ input NewDescriptorType {
   description: String!
   type: String
   father: String
-  reference: String
   projectID: String!
 }
