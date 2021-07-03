@@ -61,11 +61,12 @@ export class FraseograficStudyService {
   async createStudy(
     study: NewfraseograficStudyType,
   ): Promise<CreatedfraseograficStudyType> {
-    const { name, dictionaries } = study;
+    const { name, dictionaries, state } = study;
     let dictionariesIds: String[] = [];
     let studyModel = new this.fraseograficStudyModel({
       name,
       dictionaries: dictionariesIds,
+      state,
     });
     dictionaries.forEach(d => {
       const newDictionary = { ...d, studyID: studyModel.id };
@@ -104,6 +105,9 @@ export class FraseograficStudyService {
     if (!s) {
       throw new Error('Study dont exist');
     }
+    if (s.dictionaries.length > 0) {
+      throw new Error('Study cannot be deleted, has dictionaries');
+    }
     s.dictionaries.forEach(async dID => {
       this.dictionaryService.deleteDictionaryByID(dID);
     });
@@ -137,6 +141,7 @@ export class FraseograficStudyService {
     );
     if (oldStudy) {
       oldStudy.name = newStudy.name;
+      oldStudy.state = newStudy.state;
       console.log('oldStudy:', oldStudy);
       console.log('newDictionaries:', newDictionaries);
       oldStudy.dictionaries.forEach(oD => {
@@ -152,7 +157,7 @@ export class FraseograficStudyService {
           }
         }
         if (!found) {
-          this.dictionaryService.deleteDictionaryByID(oD);
+          // this.dictionaryService.deleteDictionaryByID(oD);
           oldStudy.dictionaries = oldStudy.dictionaries.filter(d => d != oD);
         }
       });
@@ -226,6 +231,7 @@ export class FraseograficStudyService {
       _id: study.id,
       name: study.name,
       period: study.period,
+      state: study.state,
       dictionaries: dictionariesID,
     });
     return { newDictionaries: study.dictionaries, dictionariesID, s };

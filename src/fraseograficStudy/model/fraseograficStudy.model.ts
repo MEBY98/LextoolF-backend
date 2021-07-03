@@ -15,4 +15,8 @@ export const fraseograficStudySchema = new mongoose.Schema({
     required: true,
     ref: 'Dictionary',
   },
+  state: {
+    type: String,
+    default: 'Ejecucion',
+  },
 });

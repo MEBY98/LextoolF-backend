@@ -5,6 +5,7 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { DescriptorModule } from './descriptor/descriptor.module';
 import { EntryModule } from './entry/entry.module';
 import { DictionaryModule } from './dictionary/dictionary.module';
+import { AlphabetModule } from './alphabet/alphabet.module';
 
 @Module({
   imports: [

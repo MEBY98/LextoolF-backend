@@ -5,4 +5,5 @@ export interface fraseograficStudy extends Document {
   name: string;
   period: string;
   dictionaries: String[];
+  state: string;
 }
