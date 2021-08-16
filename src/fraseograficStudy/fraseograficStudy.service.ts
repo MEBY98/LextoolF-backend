@@ -1,11 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { fraseograficStudy } from './model/fraseograficStudy.modelinterface';
+import { FraseograficStudy } from './model/fraseograficStudy.modelinterface';
 import {
   NewfraseograficStudyType,
-  CreatedfraseograficStudyType,
-  fraseograficStudyType,
+  FraseograficStudyType,
+  EditfraseograficStudyType,
 } from './type/fraseograficStudy.types';
 import { Dictionary } from 'src/dictionary/model/dictionary.modelinterface';
 import { DictionaryService } from 'src/dictionary/dictionary.service';
@@ -19,35 +19,23 @@ import { EntryService } from 'src/entry/entry.service';
 export class FraseograficStudyService {
   constructor(
     @InjectModel('fraseograficStudy')
-    private fraseograficStudyModel: Model<fraseograficStudy>,
+    private fraseograficStudyModel: Model<FraseograficStudy>,
     private readonly dictionaryService: DictionaryService,
   ) {}
 
-  async findall(): Promise<fraseograficStudy[]> {
+  async findall(): Promise<FraseograficStudy[]> {
     const allStudies = await this.fraseograficStudyModel
       .find()
       .sort({ name: 'desc' })
       .populate({
         path: 'dictionaries',
         model: 'Dictionary',
-        populate: {
-          path: 'entries',
-          model: 'Entry',
-          populate: {
-            path: 'UFs',
-            model: 'UF',
-            populate: {
-              path: 'clasifications',
-              model: 'Descriptor',
-            },
-          },
-        },
       });
-    // console.log(allStudies);
+    console.log('findAll:', allStudies);
     return allStudies;
   }
 
-  async findByID(studyID: String) {
+  async findByID(studyID: string) {
     const s = await this.fraseograficStudyModel
       .findById(studyID)
       .populate({
@@ -55,45 +43,41 @@ export class FraseograficStudyService {
         model: 'Dictionary',
       })
       .exec();
+    console.log('StudyFindByID:', s);
     return s;
   }
 
-  async createStudy(
-    study: NewfraseograficStudyType,
-  ): Promise<CreatedfraseograficStudyType> {
-    const { name, dictionaries, state } = study;
-    let dictionariesIds: String[] = [];
-    let studyModel = new this.fraseograficStudyModel({
-      name,
-      dictionaries: dictionariesIds,
-      state,
-    });
-    dictionaries.forEach(d => {
-      const newDictionary = { ...d, studyID: studyModel.id };
-      const dModel = this.dictionaryService.createDictionary(newDictionary);
-      dictionariesIds.push(dModel.id);
-    });
-    studyModel.dictionaries = dictionariesIds;
-    let minyear = 10000;
-    let maxyear = 0;
-    if (dictionaries.length === 1) {
-      studyModel.period = dictionaries[0].annoOfPublication.toString();
-    } else {
-      dictionaries.forEach(element => {
-        if (element.annoOfPublication < minyear) {
-          minyear = element.annoOfPublication;
-        }
-        if (element.annoOfPublication > maxyear) {
-          maxyear = element.annoOfPublication;
-        }
-      });
-      studyModel.period = minyear.toString() + '-' + maxyear.toString();
-    }
+  async createStudy(study: NewfraseograficStudyType) {
+    const { name, dictionaries, state, period } = study;
+    const dictionariesIDs: string[] = [];
 
-    return await studyModel.save();
+    dictionaries.forEach(d => {
+      const nd = this.dictionaryService.createDictionary(d);
+      dictionariesIDs.push(nd.id);
+    });
+
+    const s = new this.fraseograficStudyModel({
+      name: name,
+      period: period,
+      dictionaries: dictionariesIDs,
+      state: state,
+    });
+    await s.save();
+    const result = s
+      .populate({
+        path: 'dictionaries',
+        model: 'Dictionary',
+        populate: { path: 'entries', model: 'Entry' },
+      })
+      .execPopulate()
+      .then(s => {
+        console.log('createStudy:', s);
+        return s;
+      });
+    return result;
   }
 
-  async deleteStudy(studyID: String) {
+  async deleteStudy(studyID: string) {
     const s = await this.fraseograficStudyModel.findById(studyID).populate({
       path: 'dictionaries',
       model: 'Dictionary',
@@ -108,17 +92,15 @@ export class FraseograficStudyService {
     if (s.dictionaries.length > 0) {
       throw new Error('Study cannot be deleted, has dictionaries');
     }
-    s.dictionaries.forEach(async dID => {
-      this.dictionaryService.deleteDictionaryByID(dID);
-    });
+
     const deletedStudy = await s.deleteOne();
-    console.log(deletedStudy);
+    console.log('deleteStudy:', deletedStudy);
     return deletedStudy;
   }
 
   async createDictionaryByStudyID(
     newDictionary: NewDictionaryType,
-    studyID: String,
+    studyID: string,
   ) {
     const s = await this.fraseograficStudyModel.findById(studyID);
     if (!s) {
@@ -126,22 +108,27 @@ export class FraseograficStudyService {
     } else {
       const dModel = this.dictionaryService.createDictionary(newDictionary);
       s.dictionaries.push(dModel.id);
-      s.period = this.updatePeriod(s, dModel.annoOfPublication);
+      // s.period = this.updatePeriod(s, dModel.annoOfPublication);
       await this.fraseograficStudyModel.findByIdAndUpdate(studyID, s).exec();
+      await dModel.populate({
+        path: 'entries',
+        model: 'Entry',
+      });
+      console.log('createDictionaryByStudyID:', dModel);
       return dModel;
     }
   }
 
-  async editStudy(newStudy: fraseograficStudyType) {
-    let oldStudy = await this.fraseograficStudyModel
+  async editStudy(newStudy: EditfraseograficStudyType) {
+    const oldStudy = await this.fraseograficStudyModel
       .findById(newStudy.id)
       .exec();
-    const { newDictionaries, dictionariesID, s } = this.transformStudy(
-      newStudy,
-    );
+    const newDictionaries = newStudy.dictionaries;
+
     if (oldStudy) {
       oldStudy.name = newStudy.name;
       oldStudy.state = newStudy.state;
+      oldStudy.period = newStudy.period;
       console.log('oldStudy:', oldStudy);
       console.log('newDictionaries:', newDictionaries);
       oldStudy.dictionaries.forEach(oD => {
@@ -157,19 +144,20 @@ export class FraseograficStudyService {
           }
         }
         if (!found) {
-          // this.dictionaryService.deleteDictionaryByID(oD);
+          this.dictionaryService.deleteDictionaryByID(oD);
           oldStudy.dictionaries = oldStudy.dictionaries.filter(d => d != oD);
         }
       });
-      newDictionaries.forEach(nD => {
+      newDictionaries.forEach(async nD => {
         if (oldStudy.dictionaries.includes(nD.id)) {
           this.dictionaryService.editDictionarie(nD);
         } else {
-          const createdDictionary = this.dictionaryService.createDictionary(nD);
+          const createdDictionary = await this.dictionaryService.editDictionarie(
+            nD,
+          );
           oldStudy.dictionaries.push(createdDictionary.id);
         }
       });
-      oldStudy.period = this.updatePeriodOfStudy(newStudy);
       oldStudy.save();
       await oldStudy
         .populate({
@@ -177,14 +165,14 @@ export class FraseograficStudyService {
           model: 'Dictionary',
         })
         .execPopulate();
-      console.log('oldStudyAgain:', oldStudy);
+      console.log('editStudy:', oldStudy);
       return oldStudy;
     } else {
       throw new Error('No existe el Estudio');
     }
   }
 
-  updatePeriod(study: fraseograficStudy, newDictionaryYear: number) {
+  updatePeriod(study: FraseograficStudy, newDictionaryYear: number) {
     const years = study.period.split('-');
     let minYear = Number.parseInt(years[0]);
     let maxYear = Number.parseInt(years[1]);
@@ -200,7 +188,7 @@ export class FraseograficStudyService {
     return minYear + '-' + maxYear;
   }
 
-  updatePeriodOfStudy(study: fraseograficStudyType) {
+  updatePeriodOfStudy(study: FraseograficStudyType) {
     let minYear = 1000000;
     let maxYear = 0;
     if (study.dictionaries.length > 0) {
@@ -222,8 +210,8 @@ export class FraseograficStudyService {
     }
   }
 
-  transformStudy(study: fraseograficStudyType) {
-    let dictionariesID = [];
+  transformStudy(study: EditfraseograficStudyType) {
+    const dictionariesID = [];
     study.dictionaries.forEach(element => {
       dictionariesID.push(element.id);
     });

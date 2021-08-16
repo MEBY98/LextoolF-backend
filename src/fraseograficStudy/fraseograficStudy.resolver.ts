@@ -1,14 +1,15 @@
 import { Resolver, Query, Mutation, Args } from '@nestjs/graphql';
 import { FraseograficStudyService } from './fraseograficStudy.service';
 import {
-  fraseograficStudyType,
+  FraseograficStudyType,
   NewfraseograficStudyType,
-  CreatedfraseograficStudyType,
   EditfraseograficStudyType,
+  EditfraseograficStudyObjectType,
 } from './type/fraseograficStudy.types';
 import {
-  CreatedDictionaryType,
   NewDictionaryType,
+  DictionaryType,
+  EditDictionaryObjectType,
 } from 'src/dictionary/type/dictionary.types';
 
 @Resolver()
@@ -17,33 +18,33 @@ export class FraseograficStudyResolver {
     private readonly fraseograficStudyService: FraseograficStudyService,
   ) {}
 
-  @Query(() => [fraseograficStudyType])
+  @Query(() => [FraseograficStudyType])
   async getAllStudies() {
     return this.fraseograficStudyService.findall();
   }
 
-  @Query(() => fraseograficStudyType)
-  async getStudyByID(@Args('studyID') studyID: String) {
+  @Query(() => EditfraseograficStudyObjectType)
+  async getStudyByID(@Args('studyID') studyID: string) {
     return this.fraseograficStudyService.findByID(studyID);
   }
 
-  @Mutation(() => CreatedfraseograficStudyType)
+  @Mutation(() => FraseograficStudyType)
   async createStudy(
     @Args('fraseograficStudy') fraseograficStudy: NewfraseograficStudyType,
-  ): Promise<CreatedfraseograficStudyType> {
+  ) {
     return this.fraseograficStudyService.createStudy(fraseograficStudy);
   }
 
-  @Mutation(() => fraseograficStudyType)
-  async deleteStudyByID(@Args('studyID') studyID: String) {
+  @Mutation(() => FraseograficStudyType)
+  async deleteStudyByID(@Args('studyID') studyID: string) {
     console.log(studyID);
     return this.fraseograficStudyService.deleteStudy(studyID);
   }
 
-  @Mutation(() => CreatedDictionaryType)
+  @Mutation(() => EditDictionaryObjectType)
   async createDictionaryByStudyID(
     @Args('newDictionary') newDictionary: NewDictionaryType,
-    @Args('studyID') studyID: String,
+    @Args('studyID') studyID: string,
   ) {
     return this.fraseograficStudyService.createDictionaryByStudyID(
       newDictionary,
@@ -51,7 +52,7 @@ export class FraseograficStudyResolver {
     );
   }
 
-  @Mutation(() => fraseograficStudyType)
+  @Mutation(() => FraseograficStudyType)
   async editStudy(@Args('newStudy') newStudy: EditfraseograficStudyType) {
     return this.fraseograficStudyService.editStudy(newStudy);
   }

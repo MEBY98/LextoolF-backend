@@ -6,13 +6,18 @@ export const EntrySchema = new mongoose.Schema({
     required: true,
   },
   context: {
-    type: String,
+    type: [String],
     required: true,
   },
-  lemma: {
-    type: String,
-    required: false,
+  sublemmas: {
+    type: [mongoose.Schema.Types.ObjectId],
     default: null,
+    ref: 'Sublemma',
+  },
+  lemma: {
+    type: mongoose.Schema.Types.ObjectId,
+    default: null,
+    ref: 'Lemma',
   },
   UFs: {
     type: [mongoose.Schema.Types.ObjectId],

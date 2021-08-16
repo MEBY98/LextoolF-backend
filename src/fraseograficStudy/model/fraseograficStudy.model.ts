@@ -12,7 +12,7 @@ export const fraseograficStudySchema = new mongoose.Schema({
   },
   dictionaries: {
     type: [mongoose.Schema.Types.ObjectId],
-    required: true,
+    default: [],
     ref: 'Dictionary',
   },
   state: {

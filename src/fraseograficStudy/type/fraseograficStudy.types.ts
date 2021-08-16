@@ -2,12 +2,12 @@ import { InputType, ObjectType, Field, ID } from '@nestjs/graphql';
 import {
   DictionaryType,
   NewDictionaryType,
-  DictionaryTypeWithoutEntries,
-  EditDictionaryTypeWithoutEntries,
+  EditDictionaryObjectType,
+  EditDictionaryInputType,
 } from 'src/dictionary/type/dictionary.types';
 
 @ObjectType()
-export class fraseograficStudyType {
+export class FraseograficStudyType {
   @Field(() => ID)
   id?: string;
   @Field()
@@ -16,12 +16,12 @@ export class fraseograficStudyType {
   period: string;
   @Field()
   state: string;
-  @Field(type => [DictionaryTypeWithoutEntries])
-  dictionaries: [DictionaryTypeWithoutEntries];
+  @Field(() => [DictionaryType])
+  dictionaries: [DictionaryType];
 }
 
 @ObjectType()
-export class CreatedfraseograficStudyType {
+export class EditfraseograficStudyObjectType {
   @Field(() => ID)
   id?: string;
   @Field()
@@ -30,20 +30,20 @@ export class CreatedfraseograficStudyType {
   period: string;
   @Field()
   state: string;
-  @Field(type => [String])
-  dictionaries: String[];
+  @Field(() => [EditDictionaryObjectType])
+  dictionaries: [EditDictionaryObjectType];
 }
 
 @InputType()
 export class NewfraseograficStudyType {
   @Field()
-  readonly name: string;
+  name: string;
   @Field()
-  readonly period: string;
+  period: string;
   @Field({ nullable: true })
   state: string;
-  @Field(type => [NewDictionaryType], { nullable: true })
-  readonly dictionaries: NewDictionaryType[];
+  @Field(() => [NewDictionaryType], { nullable: true })
+  dictionaries: NewDictionaryType[];
 }
 
 @InputType()
@@ -56,6 +56,6 @@ export class EditfraseograficStudyType {
   period: string;
   @Field({ nullable: true })
   state: string;
-  @Field(type => [EditDictionaryTypeWithoutEntries])
-  dictionaries: [EditDictionaryTypeWithoutEntries];
+  @Field(() => [EditDictionaryInputType], { nullable: true })
+  dictionaries: EditDictionaryInputType[];
 }

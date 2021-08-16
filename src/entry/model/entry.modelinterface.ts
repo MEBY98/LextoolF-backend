@@ -1,8 +1,9 @@
 import { Document } from 'mongoose';
 
 export interface Entry extends Document {
-  letter: String;
-  contexto: String;
-  lemma: String;
-  UFs: String[];
+  letter: string;
+  context: string[];
+  lemma: string;
+  sublemmas: string[];
+  UFs: string[];
 }
