@@ -2,11 +2,13 @@
   "collection": "@nestjs/schematics",
   "sourceRoot": "src",
   "compilerOptions": {
-    "plugins": [{
-      "name": "@nestjs/graphql/plugin",
-      "options": {
-        "typeFileNameSuffix": [".schema.ts"]
+    "plugins": [
+      {
+        "name": "@nestjs/graphql/plugin",
+        "options": {
+          "typeFileNameSuffix": [".schema.ts", ".types.dto"]
+        }
       }
-    }]
+    ]
   }
 }
