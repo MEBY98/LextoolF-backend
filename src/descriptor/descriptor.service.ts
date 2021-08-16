@@ -10,59 +10,59 @@ export class DescriptorService {
     @InjectModel('Descriptor') private DescriptorModel: Model<Descriptor>,
   ) {}
 
-  async findAll(): Promise<DescriptorType[]> {
-    const descriptors = await this.DescriptorModel.find().exec();
-    const tree = this.convertToTree(descriptors);
-    return tree;
+  async findAll() {
+    const ds = await this.DescriptorModel.find().exec();
+    console.log('findallDescriptors:', ds);
+    return ds;
   }
 
-  convertToTree(descriptors: Descriptor[]): any[] {
-    let roots = [];
-    descriptors.forEach(i => {
-      if (i.father === null) {
-        const index = descriptors.indexOf(i);
-        const item = {
-          id: String(i.id),
-          father: i.father,
-          root: i.root,
-          description: i.description,
-          projectID: i.projectID,
-          descriptorsChild: [],
-        };
-        descriptors.splice(index, 1);
-        roots.push(item);
-      }
-    });
-    for (let i = 0; i < descriptors.length; i++) {
-      const element = descriptors[i];
-      this.searchFather(element, roots);
-    }
-    console.log(roots);
-    return roots;
-  }
-
-  searchFather(descriptor: Descriptor, fathers: any[]) {
-    let result = false;
-    for (let i = 0; i < fathers.length; i++) {
-      if (descriptor.father === fathers[i].id) {
-        fathers[i].descriptorsChild.push({
-          id: String(descriptor.id),
-          father: descriptor.father,
-          root: descriptor.root,
-          description: descriptor.description,
-          projectID: descriptor.projectID,
-          descriptorsChild: [],
-        });
-      } else {
-        this.searchFather(descriptor, fathers[i].descriptorsChild);
-      }
-    }
-  }
-
-  async createDescriptor(d: NewDescriptorType): Promise<Descriptor> {
-    console.log(d);
-    const newd = new this.DescriptorModel(d);
-    console.log(newd);
-    return await newd.save();
+  createDescriptor(NewDescriptor: NewDescriptorType) {
+    const d = new this.DescriptorModel(NewDescriptor);
+    d.save();
+    console.log('createdDescriptor:', d);
+    return d;
   }
 }
+
+// convertToTree(descriptors: Descriptor[]): any[] {
+//   let roots = [];
+//   descriptors.forEach(i => {
+//     if (i.father === null) {
+//       const index = descriptors.indexOf(i);
+//       const item = {
+//         id: String(i.id),
+//         father: i.father,
+//         root: i.root,
+//         description: i.description,
+//         projectID: i.projectID,
+//         descriptorsChild: [],
+//       };
+//       descriptors.splice(index, 1);
+//       roots.push(item);
+//     }
+//   });
+//   for (let i = 0; i < descriptors.length; i++) {
+//     const element = descriptors[i];
+//     this.searchFather(element, roots);
+//   }
+//   console.log(roots);
+//   return roots;
+// }
+
+// searchFather(descriptor: Descriptor, fathers: any[]) {
+//   let result = false;
+//   for (let i = 0; i < fathers.length; i++) {
+//     if (descriptor.father === fathers[i].id) {
+//       fathers[i].descriptorsChild.push({
+//         id: String(descriptor.id),
+//         father: descriptor.father,
+//         root: descriptor.root,
+//         description: descriptor.description,
+//         projectID: descriptor.projectID,
+//         descriptorsChild: [],
+//       });
+//     } else {
+//       this.searchFather(descriptor, fathers[i].descriptorsChild);
+//     }
+//   }
+// }
