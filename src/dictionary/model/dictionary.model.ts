@@ -1,5 +1,4 @@
 import * as mongoose from 'mongoose';
-import { Author } from './author.class';
 
 export const DictionarySchema = new mongoose.Schema({
   name: {

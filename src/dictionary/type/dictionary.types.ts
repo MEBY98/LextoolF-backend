@@ -1,94 +1,81 @@
 import { InputType, ObjectType, Field, ID } from '@nestjs/graphql';
-import { fraseograficStudyType } from 'src/fraseograficStudy/type/fraseograficStudy.types';
-import { EntryType } from 'src/entry/type/entry.type';
+import { EntryType, NewEntryType } from 'src/entry/type/entry.type';
 import { AuthorType, NewAuthorType } from './author.type';
 
 @ObjectType()
 export class DictionaryType {
   @Field(() => ID)
-  id?: String;
+  id?: string;
   @Field()
-  name: String;
+  name: string;
   @Field()
-  shortName: String;
+  shortName: string;
   @Field(() => [AuthorType])
   author: [AuthorType];
   @Field()
   annoOfPublication: number;
   @Field()
-  reference: String;
+  reference: string;
   @Field(() => [String])
-  letters: [String];
+  letters: [string];
   @Field(() => [EntryType])
   entries: EntryType[];
 }
 
 @ObjectType()
-export class DictionaryTypeWithoutEntries {
-  @Field(() => ID)
-  id?: String;
+export class EditDictionaryObjectType {
+  @Field(() => ID, { nullable: true })
+  id?: string;
   @Field()
-  name: String;
+  name: string;
   @Field()
-  shortName: String;
+  shortName: string;
   @Field(() => [AuthorType])
   author: [AuthorType];
   @Field()
   annoOfPublication: number;
   @Field()
-  reference: String;
+  reference: string;
   @Field(() => [String])
-  letters: [String];
-}
-
-@ObjectType()
-export class CreatedDictionaryType {
-  @Field(() => ID)
-  id?: String;
-  @Field()
-  name: String;
-  @Field()
-  shortName: String;
-  @Field(() => [AuthorType])
-  author: [AuthorType];
-  @Field()
-  annoOfPublication: number;
-  @Field()
-  reference: String;
-  @Field(() => [String])
-  letters: [String];
+  letters: [string];
+  @Field(() => [String], { nullable: true })
+  entries: [string];
 }
 
 @InputType()
 export class NewDictionaryType {
   @Field()
-  name: String;
+  name: string;
   @Field()
-  shortName: String;
+  shortName: string;
   @Field(() => [NewAuthorType])
   author: [NewAuthorType];
   @Field()
   annoOfPublication: number;
   @Field()
-  reference: String;
+  reference: string;
   @Field(() => [String])
-  letters: [String];
+  letters: [string];
+  @Field(() => [String], { nullable: true })
+  entries: [string];
 }
 
 @InputType()
-export class EditDictionaryTypeWithoutEntries {
+export class EditDictionaryInputType {
   @Field(() => ID, { nullable: true })
-  id?: String;
+  id?: string;
   @Field()
-  name: String;
+  name: string;
   @Field()
-  shortName: String;
+  shortName: string;
   @Field(() => [NewAuthorType])
   author: [NewAuthorType];
   @Field()
   annoOfPublication: number;
   @Field()
-  reference: String;
+  reference: string;
   @Field(() => [String])
-  letters: [String];
+  letters: [string];
+  @Field(() => [String], { nullable: true })
+  entries: [string];
 }

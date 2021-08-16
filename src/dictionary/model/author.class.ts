@@ -1,4 +1,4 @@
 export class Author {
-  name: String;
-  siglas: String;
+  name: string;
+  siglas: string;
 }

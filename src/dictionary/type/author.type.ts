@@ -3,15 +3,15 @@ import { InputType, ObjectType, Field, ID } from '@nestjs/graphql';
 @InputType()
 export class NewAuthorType {
   @Field()
-  name: String;
+  name: string;
   @Field()
-  siglas: String;
+  siglas: string;
 }
 
 @ObjectType()
 export class AuthorType {
   @Field()
-  name: String;
+  name: string;
   @Field()
-  siglas: String;
+  siglas: string;
 }
