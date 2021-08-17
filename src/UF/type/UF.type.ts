@@ -19,6 +19,24 @@ import {
   UseInformationToEditType,
   EditedUseInformationType,
 } from './UseInformation.type';
+import {
+  GeneralDescriptionObjectType,
+  GeneralDescriptorToEditType,
+  GeneralDescriptorInputType,
+  EditedGeneralDescriptorType,
+} from './GeneralDescription.types';
+import {
+  OrderLemmaObjectType,
+  OrderLemmaToEditType,
+  OrderLemmaInputType,
+  EditedOrderLemmaType,
+} from './OrderLemma.type';
+import {
+  EditedParadigmaticInfoType,
+  ParadigmaticInfoInputType,
+  ParadigmaticInfoToEditType,
+  ParadigmaticInfoObjectType,
+} from './ParadigmaticInfo.type';
 
 @ObjectType()
 export class UFtype {
@@ -28,18 +46,18 @@ export class UFtype {
   UF: string;
   @Field(() => Ubicationtype)
   ubication: Ubicationtype;
-  @Field(() => [DescriptorType], { nullable: true })
-  generalDescription: [DescriptorType];
+  @Field(() => GeneralDescriptionObjectType, { nullable: true })
+  generalDescription: GeneralDescriptionObjectType;
   @Field(() => [UseInformationObjectType], { nullable: true })
-  useInformation: [UseInformationObjectType];
-  @Field(() => [[DescriptorType]], { nullable: true })
-  orderLemma: [[DescriptorType]];
+  useInformation: UseInformationObjectType[];
+  @Field(() => OrderLemmaObjectType, { nullable: true })
+  orderLemma: OrderLemmaObjectType;
   @Field(() => [ContornoDefinitionObjectType], { nullable: true })
-  ContornoDefinition: [ContornoDefinitionObjectType];
+  ContornoDefinition: ContornoDefinitionObjectType[];
   @Field(() => ExampleObjectType, { nullable: true })
   example: ExampleObjectType;
-  @Field(() => [[DescriptorType]], { nullable: true })
-  paradigmaticInfo: [[DescriptorType]];
+  @Field(() => ParadigmaticInfoObjectType, { nullable: true })
+  paradigmaticInfo: ParadigmaticInfoObjectType;
 }
 
 @ObjectType()
@@ -50,18 +68,18 @@ export class UFToEditType {
   UF: string;
   @Field(() => String)
   ubication: string;
-  @Field(() => [String], { nullable: true })
-  generalDescription: string[];
+  @Field(() => GeneralDescriptorToEditType, { nullable: true })
+  generalDescription: GeneralDescriptorToEditType;
   @Field(() => [UseInformationToEditType], { nullable: true })
-  useInformation: [UseInformationToEditType];
-  @Field(() => [[String]], { nullable: true })
-  orderLemma: string[][];
+  useInformation: UseInformationToEditType[];
+  @Field(() => OrderLemmaToEditType, { nullable: true })
+  orderLemma: OrderLemmaToEditType;
   @Field(() => [ContornoDefinitionToEditType], { nullable: true })
-  ContornoDefinition: [ContornoDefinitionToEditType];
+  ContornoDefinition: ContornoDefinitionToEditType[];
   @Field(() => ExampleToEditType, { nullable: true })
   example: ExampleToEditType;
-  @Field(() => [String], { nullable: true })
-  paradigmaticInfo: [string];
+  @Field(() => ParadigmaticInfoToEditType, { nullable: true })
+  paradigmaticInfo: ParadigmaticInfoToEditType;
 }
 
 @InputType()
@@ -70,18 +88,18 @@ export class NewUFtype {
   UF: string;
   @Field(() => String)
   ubication: string;
-  @Field(() => [String], { nullable: true })
-  generalDescription: string[];
+  @Field(() => GeneralDescriptorInputType, { nullable: true })
+  generalDescription: GeneralDescriptorInputType;
   @Field(() => [UseInformationInputType], { nullable: true })
-  useInformation: [UseInformationInputType];
-  @Field(() => [[String]], { nullable: true })
-  orderLemma: string[][];
+  useInformation: UseInformationInputType[];
+  @Field(() => OrderLemmaInputType, { nullable: true })
+  orderLemma: OrderLemmaInputType;
   @Field(() => [ContornoDefinitionInputType], { nullable: true })
-  ContornoDefinition: [ContornoDefinitionInputType];
+  ContornoDefinition: ContornoDefinitionInputType[];
   @Field(() => ExampleInputType, { nullable: true })
   example: ExampleInputType;
-  @Field(() => [String], { nullable: true })
-  paradigmaticInfo: [string];
+  @Field(() => ParadigmaticInfoInputType, { nullable: true })
+  paradigmaticInfo: ParadigmaticInfoInputType;
 }
 
 @InputType()
@@ -92,16 +110,16 @@ export class EditedUFType {
   UF: string;
   @Field(() => String)
   ubication: string;
-  @Field(() => [String], { nullable: true })
-  generalDescription: string[];
+  @Field(() => EditedGeneralDescriptorType, { nullable: true })
+  generalDescription: EditedGeneralDescriptorType;
   @Field(() => [EditedUseInformationType], { nullable: true })
-  useInformation: [EditedUseInformationType];
-  @Field(() => [[String]], { nullable: true })
-  orderLemma: string[][];
+  useInformation: EditedUseInformationType[];
+  @Field(() => EditedOrderLemmaType, { nullable: true })
+  orderLemma: EditedOrderLemmaType;
   @Field(() => [EditedContornoDefinitionType], { nullable: true })
-  ContornoDefinition: [EditedContornoDefinitionType];
+  ContornoDefinition: EditedContornoDefinitionType[];
   @Field(() => EditedExampleType, { nullable: true })
   example: EditedExampleType;
-  @Field(() => [String], { nullable: true })
-  paradigmaticInfo: string[];
+  @Field(() => EditedParadigmaticInfoType, { nullable: true })
+  paradigmaticInfo: EditedParadigmaticInfoType;
 }

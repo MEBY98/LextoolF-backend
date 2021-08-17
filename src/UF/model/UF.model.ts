@@ -13,8 +13,20 @@ export const UFSchema = new mongoose.Schema({
     ref: 'Ubication',
   },
   generalDescription: {
-    type: [mongoose.Schema.Types.ObjectId],
-    ref: 'Descriptor',
+    type: {
+      type: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Descriptor',
+      },
+      structure: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Descriptor',
+      },
+      conceptualDomain: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Descriptor',
+      },
+    },
   },
   useInformation: {
     type: [
@@ -23,15 +35,55 @@ export const UFSchema = new mongoose.Schema({
           type: String,
         },
         descriptors: {
-          type: [mongoose.Schema.Types.ObjectId],
-          ref: 'Descriptor',
+          type: {
+            position: {
+              type: mongoose.Schema.Types.ObjectId,
+              ref: 'Descriptor',
+            },
+            format: {
+              type: mongoose.Schema.Types.ObjectId,
+              ref: 'Descriptor',
+            },
+            tipography: {
+              type: mongoose.Schema.Types.ObjectId,
+              ref: 'Descriptor',
+            },
+          },
         },
       },
     ],
   },
   orderLemma: {
-    type: [[mongoose.Schema.Types.ObjectId]],
-    ref: 'Descriptor',
+    type: {
+      order: {
+        type: [mongoose.Schema.Types.ObjectId],
+        ref: 'Descriptor',
+      },
+      criteriaOfLematization: {
+        type: [mongoose.Schema.Types.ObjectId],
+        ref: 'Descriptor',
+      },
+      formalStructure: {
+        type: [mongoose.Schema.Types.ObjectId],
+        ref: 'Descriptor',
+      },
+      ubicationOfContorno: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Descriptor',
+      },
+      typeOfVariant: {
+        type: [mongoose.Schema.Types.ObjectId],
+        ref: 'Descriptor',
+      },
+      formatOfVariant: {
+        type: [mongoose.Schema.Types.ObjectId],
+        ref: 'Descriptor',
+      },
+      tipographyOfVariant: {
+        type: [mongoose.Schema.Types.ObjectId],
+        ref: 'Descriptor',
+      },
+    },
   },
   ContornoDefinition: {
     type: [
@@ -43,6 +95,10 @@ export const UFSchema = new mongoose.Schema({
             },
             descriptors: {
               typeOfDefinition: {
+                type: mongoose.Schema.Types.ObjectId,
+                ref: 'Descriptor',
+              },
+              argumentalSchema: {
                 type: mongoose.Schema.Types.ObjectId,
                 ref: 'Descriptor',
               },
@@ -59,8 +115,20 @@ export const UFSchema = new mongoose.Schema({
               type: String,
             },
             descriptors: {
-              type: [mongoose.Schema.Types.ObjectId],
-              ref: 'Descriptor',
+              type: {
+                typeOfContorno: {
+                  type: [mongoose.Schema.Types.ObjectId],
+                  ref: 'Descriptor',
+                },
+                positionOfContorno: {
+                  type: [mongoose.Schema.Types.ObjectId],
+                  ref: 'Descriptor',
+                },
+                formatOfContorno: {
+                  type: [mongoose.Schema.Types.ObjectId],
+                  ref: 'Descriptor',
+                },
+              },
             },
           },
         },
@@ -73,22 +141,34 @@ export const UFSchema = new mongoose.Schema({
         type: String,
       },
       typeOfExample: {
-        type: mongoose.Types.ObjectId,
+        type: [mongoose.Schema.Types.ObjectId],
         ref: 'Descriptor',
       },
       formatOfExample: {
-        type: [mongoose.Types.ObjectId],
+        type: [mongoose.Schema.Types.ObjectId],
         ref: 'Descriptor',
       },
       functionOfExample: {
-        type: [mongoose.Types.ObjectId],
+        type: [mongoose.Schema.Types.ObjectId],
         ref: 'Descriptor',
       },
     },
   },
   paradigmaticInfo: {
-    type: [mongoose.Schema.Types.ObjectId],
-    ref: 'Descriptor',
+    type: {
+      typeOfRelationship: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Descriptor',
+      },
+      formOfPresentation: {
+        type: [mongoose.Schema.Types.ObjectId],
+        ref: 'Descriptor',
+      },
+      position: {
+        type: [mongoose.Schema.Types.ObjectId],
+        ref: 'Descriptor',
+      },
+    },
   },
 });
 

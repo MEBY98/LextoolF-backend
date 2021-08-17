@@ -116,8 +116,8 @@ export class UFService {
       oldUF.useInformation = useInformation;
       oldUF.orderLemma = orderLemma;
       oldUF.generalDescription = generalDescription;
-      (oldUF.ContornoDefinition = ContornoDefinition),
-        (oldUF.paradigmaticInfo = paradigmaticInfo);
+      oldUF.ContornoDefinition = ContornoDefinition;
+      oldUF.paradigmaticInfo = paradigmaticInfo;
       return await oldUF.save();
     } else {
       throw new Error('UF dont exist');

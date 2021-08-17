@@ -5,20 +5,20 @@ import { DescriptorType } from 'src/descriptor/type/descriptor.types.dto';
 export class ExampleObjectType {
   @Field({ nullable: true })
   anotation: string;
-  @Field({ nullable: true })
-  typeOfExample: DescriptorType;
   @Field(() => [DescriptorType], { nullable: true })
-  formatOfExample: [DescriptorType];
+  typeOfExample: DescriptorType[];
   @Field(() => [DescriptorType], { nullable: true })
-  functionOfExample: [DescriptorType];
+  formatOfExample: DescriptorType[];
+  @Field(() => [DescriptorType], { nullable: true })
+  functionOfExample: DescriptorType[];
 }
 
 @ObjectType()
 export class ExampleToEditType {
   @Field({ nullable: true })
   anotation: string;
-  @Field({ nullable: true })
-  typeOfExample: string;
+  @Field(() => [String], { nullable: true })
+  typeOfExample: string[];
   @Field(() => [String], { nullable: true })
   formatOfExample: string[];
   @Field(() => [String], { nullable: true })
@@ -29,8 +29,8 @@ export class ExampleToEditType {
 export class ExampleInputType {
   @Field({ nullable: true })
   anotation: string;
-  @Field({ nullable: true })
-  typeOfExample: string;
+  @Field(() => [String], { nullable: true })
+  typeOfExample: string[];
   @Field(() => [String], { nullable: true })
   formatOfExample: string[];
   @Field(() => [String], { nullable: true })
@@ -41,8 +41,8 @@ export class ExampleInputType {
 export class EditedExampleType {
   @Field({ nullable: true })
   anotation: string;
-  @Field({ nullable: true })
-  typeOfExample: string;
+  @Field(() => [String], { nullable: true })
+  typeOfExample: string[];
   @Field(() => [String], { nullable: true })
   formatOfExample: string[];
   @Field(() => [String], { nullable: true })

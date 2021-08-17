@@ -20,11 +20,13 @@ type Ubicationtype {
 
 type DescriptorsDefinitionObjectType {
   typeOfDefinition: DescriptorType
+  argumentalSchema: DescriptorType
   relationship: [DescriptorType!]
 }
 
 type DescriptorsDefinitionToEditType {
   typeOfDefinition: String
+  argumentalSchema: String
   relationship: [String!]
 }
 
@@ -38,14 +40,26 @@ type DefinitionToEditType {
   descriptors: DescriptorsDefinitionToEditType
 }
 
+type DescriptorsContornoObjectType {
+  typeOfContorno: [DescriptorType!]
+  positionOfContorno: [DescriptorType!]
+  formatOfContorno: [DescriptorType!]
+}
+
+type DescriptorsContornoToEditType {
+  typeOfContorno: [String!]
+  positionOfContorno: [String!]
+  formatOfContorno: [String!]
+}
+
 type ContornoObjectType {
   contorno: String!
-  descriptors: [DescriptorType!]!
+  descriptors: DescriptorsContornoObjectType!
 }
 
 type ContornoToEditType {
   contorno: String
-  descriptors: [String!]
+  descriptors: DescriptorsContornoToEditType
 }
 
 type ContornoDefinitionObjectType {
@@ -60,50 +74,106 @@ type ContornoDefinitionToEditType {
 
 type ExampleObjectType {
   anotation: String
-  typeOfExample: DescriptorType
+  typeOfExample: [DescriptorType!]
   formatOfExample: [DescriptorType!]
   functionOfExample: [DescriptorType!]
 }
 
 type ExampleToEditType {
   anotation: String
-  typeOfExample: String
+  typeOfExample: [String!]
   formatOfExample: [String!]
   functionOfExample: [String!]
 }
 
+type UseInformationDescriptorsObjectType {
+  position: DescriptorType
+  format: DescriptorType
+  tipography: DescriptorType
+}
+
+type UseInformationDescriptorsToEditType {
+  position: String
+  format: String
+  tipography: String
+}
+
 type UseInformationObjectType {
   anotation: String
-  descriptors: [DescriptorType!]
+  descriptors: UseInformationDescriptorsObjectType
 }
 
 type UseInformationToEditType {
   anotation: String
-  descriptors: [String!]
+  descriptors: UseInformationDescriptorsToEditType
+}
+
+type GeneralDescriptionObjectType {
+  type: DescriptorType
+  structure: DescriptorType
+  conceptualDomain: DescriptorType
+}
+
+type GeneralDescriptorToEditType {
+  type: String
+  structure: String
+  conceptualDomain: String
+}
+
+type OrderLemmaObjectType {
+  order: [DescriptorType!]
+  criteriaOfLematization: [DescriptorType!]
+  formalStructure: [DescriptorType!]
+  ubicationOfContorno: DescriptorType
+  typeOfVariant: [DescriptorType!]
+  formatOfVariant: [DescriptorType!]
+  tipographyOfVariant: [DescriptorType!]
+}
+
+type OrderLemmaToEditType {
+  order: [String!]
+  criteriaOfLematization: [String!]
+  formalStructure: [String!]
+  ubicationOfContorno: String
+  typeOfVariant: [String!]
+  formatOfVariant: [String!]
+  tipographyOfVariant: [String!]
+}
+
+type ParadigmaticInfoObjectType {
+  typeOfRelationship: DescriptorType
+  formOfPresentation: [DescriptorType!]
+  position: [DescriptorType!]
+}
+
+type ParadigmaticInfoToEditType {
+  typeOfRelationship: String
+  formOfPresentation: [String!]
+  position: [String!]
 }
 
 type UFtype {
   id: ID!
   UF: String!
   ubication: Ubicationtype!
-  generalDescription: [DescriptorType!]
+  generalDescription: GeneralDescriptionObjectType
   useInformation: [UseInformationObjectType!]
-  orderLemma: [[DescriptorType!]!]
+  orderLemma: OrderLemmaObjectType
   ContornoDefinition: [ContornoDefinitionObjectType!]
   example: ExampleObjectType
-  paradigmaticInfo: [[DescriptorType!]!]
+  paradigmaticInfo: ParadigmaticInfoObjectType
 }
 
 type UFToEditType {
   id: ID!
   UF: String!
   ubication: String!
-  generalDescription: [String!]
+  generalDescription: GeneralDescriptorToEditType
   useInformation: [UseInformationToEditType!]
-  orderLemma: [[String!]!]
+  orderLemma: OrderLemmaToEditType
   ContornoDefinition: [ContornoDefinitionToEditType!]
   example: ExampleToEditType
-  paradigmaticInfo: [String!]
+  paradigmaticInfo: ParadigmaticInfoToEditType
 }
 
 type Sublemmatype {
@@ -310,17 +380,39 @@ input NewSublemmatype {
 input NewUFtype {
   UF: String!
   ubication: String!
-  generalDescription: [String!]
+  generalDescription: GeneralDescriptorInputType
   useInformation: [UseInformationInputType!]
-  orderLemma: [[String!]!]
+  orderLemma: OrderLemmaInputType
   ContornoDefinition: [ContornoDefinitionInputType!]
   example: ExampleInputType
-  paradigmaticInfo: [String!]
+  paradigmaticInfo: ParadigmaticInfoInputType
+}
+
+input GeneralDescriptorInputType {
+  type: String
+  structure: String
+  conceptualDomain: String
 }
 
 input UseInformationInputType {
   anotation: String
-  descriptors: [String!]
+  descriptors: UseInformationDescriptorsInputType
+}
+
+input UseInformationDescriptorsInputType {
+  position: String
+  format: String
+  tipography: String
+}
+
+input OrderLemmaInputType {
+  order: [String!]
+  criteriaOfLematization: [String!]
+  formalStructure: [String!]
+  ubicationOfContorno: String
+  typeOfVariant: [String!]
+  formatOfVariant: [String!]
+  tipographyOfVariant: [String!]
 }
 
 input ContornoDefinitionInputType {
@@ -335,19 +427,32 @@ input DefinitionInputType {
 
 input DescriptorsDefinitionInputType {
   typeOfDefinition: String
+  argumentalSchema: String
   relationship: [String!]
 }
 
 input ContornoInputType {
   contorno: String
-  descriptors: [String!]
+  descriptors: DescriptorsContornoInputType
+}
+
+input DescriptorsContornoInputType {
+  typeOfContorno: [String!]
+  positionOfContorno: [String!]
+  formatOfContorno: [String!]
 }
 
 input ExampleInputType {
   anotation: String
-  typeOfExample: String
+  typeOfExample: [String!]
   formatOfExample: [String!]
   functionOfExample: [String!]
+}
+
+input ParadigmaticInfoInputType {
+  typeOfRelationship: String
+  formOfPresentation: [String!]
+  position: [String!]
 }
 
 input EditedEntryType {
@@ -375,17 +480,39 @@ input EditedUFType {
   id: ID
   UF: String!
   ubication: String!
-  generalDescription: [String!]
+  generalDescription: EditedGeneralDescriptorType
   useInformation: [EditedUseInformationType!]
-  orderLemma: [[String!]!]
+  orderLemma: EditedOrderLemmaType
   ContornoDefinition: [EditedContornoDefinitionType!]
   example: EditedExampleType
-  paradigmaticInfo: [String!]
+  paradigmaticInfo: EditedParadigmaticInfoType
+}
+
+input EditedGeneralDescriptorType {
+  type: String
+  structure: String
+  conceptualDomain: String
 }
 
 input EditedUseInformationType {
   anotation: String
-  descriptors: [String!]
+  descriptors: EditedUseInformationDescriptorsType
+}
+
+input EditedUseInformationDescriptorsType {
+  position: String
+  format: String
+  tipography: String
+}
+
+input EditedOrderLemmaType {
+  order: [String!]
+  criteriaOfLematization: [String!]
+  formalStructure: [String!]
+  ubicationOfContorno: String
+  typeOfVariant: [String!]
+  formatOfVariant: [String!]
+  tipographyOfVariant: [String!]
 }
 
 input EditedContornoDefinitionType {
@@ -400,19 +527,32 @@ input EditedDefinitionType {
 
 input EditedDescriptorsDefinitionType {
   typeOfDefinition: String
+  argumentalSchema: String
   relationship: [String!]
 }
 
 input EditedContornoType {
   contorno: String
-  descriptors: [String!]
+  descriptors: EditedDescriptorsContornoType
+}
+
+input EditedDescriptorsContornoType {
+  typeOfContorno: [String!]
+  positionOfContorno: [String!]
+  formatOfContorno: [String!]
 }
 
 input EditedExampleType {
   anotation: String
-  typeOfExample: String
+  typeOfExample: [String!]
   formatOfExample: [String!]
   functionOfExample: [String!]
+}
+
+input EditedParadigmaticInfoType {
+  typeOfRelationship: String
+  formOfPresentation: [String!]
+  position: [String!]
 }
 
 input NewUbicationtype {

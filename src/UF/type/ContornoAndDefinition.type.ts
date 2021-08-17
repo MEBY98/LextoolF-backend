@@ -6,14 +6,18 @@ import { DescriptorType } from 'src/descriptor/type/descriptor.types.dto';
 export class DescriptorsDefinitionObjectType {
   @Field({ nullable: true })
   typeOfDefinition: DescriptorType;
+  @Field({ nullable: true })
+  argumentalSchema: DescriptorType;
   @Field(() => [DescriptorType], { nullable: true })
-  relationship: [DescriptorType];
+  relationship: DescriptorType[];
 }
 
 @ObjectType()
 export class DescriptorsDefinitionToEditType {
   @Field({ nullable: true })
   typeOfDefinition: string;
+  @Field({ nullable: true })
+  argumentalSchema: string;
   @Field(() => [String], { nullable: true })
   relationship: string[];
 }
@@ -22,6 +26,8 @@ export class DescriptorsDefinitionToEditType {
 export class DescriptorsDefinitionInputType {
   @Field({ nullable: true })
   typeOfDefinition: string;
+  @Field({ nullable: true })
+  argumentalSchema: string;
   @Field(() => [String], { nullable: true })
   relationship: string[];
 }
@@ -30,6 +36,8 @@ export class DescriptorsDefinitionInputType {
 export class EditedDescriptorsDefinitionType {
   @Field({ nullable: true })
   typeOfDefinition: string;
+  @Field({ nullable: true })
+  argumentalSchema: string;
   @Field(() => [String], { nullable: true })
   relationship: string[];
 }
@@ -67,37 +75,78 @@ export class EditedDefinitionType {
   descriptors: EditedDescriptorsDefinitionType;
 }
 
-//Conotorno
+//DescriptorsContorno
+@ObjectType()
+export class DescriptorsContornoObjectType {
+  @Field(() => [DescriptorType], { nullable: true })
+  typeOfContorno: DescriptorType[];
+  @Field(() => [DescriptorType], { nullable: true })
+  positionOfContorno: DescriptorType[];
+  @Field(() => [DescriptorType], { nullable: true })
+  formatOfContorno: DescriptorType[];
+}
+
+@ObjectType()
+export class DescriptorsContornoToEditType {
+  @Field(() => [String], { nullable: true })
+  typeOfContorno: string[];
+  @Field(() => [String], { nullable: true })
+  positionOfContorno: string[];
+  @Field(() => [String], { nullable: true })
+  formatOfContorno: string[];
+}
+
+@InputType()
+export class DescriptorsContornoInputType {
+  @Field(() => [String], { nullable: true })
+  typeOfContorno: string[];
+  @Field(() => [String], { nullable: true })
+  positionOfContorno: string[];
+  @Field(() => [String], { nullable: true })
+  formatOfContorno: string[];
+}
+
+@InputType()
+export class EditedDescriptorsContornoType {
+  @Field(() => [String], { nullable: true })
+  typeOfContorno: string[];
+  @Field(() => [String], { nullable: true })
+  positionOfContorno: string[];
+  @Field(() => [String], { nullable: true })
+  formatOfContorno: string[];
+}
+
+//Contorno
 @ObjectType()
 export class ContornoObjectType {
   @Field()
   contorno: string;
-  @Field(() => [DescriptorType])
-  descriptors: [DescriptorType];
+  @Field(() => DescriptorsContornoObjectType)
+  descriptors: DescriptorsContornoObjectType;
 }
 
 @ObjectType()
 export class ContornoToEditType {
   @Field({ nullable: true })
   contorno: string;
-  @Field(() => [String], { nullable: true })
-  descriptors: string[];
+  @Field(() => DescriptorsContornoToEditType, { nullable: true })
+  descriptors: DescriptorsContornoToEditType;
 }
 
 @InputType()
 export class ContornoInputType {
   @Field({ nullable: true })
   contorno: string;
-  @Field(() => [String], { nullable: true })
-  descriptors: string[];
+  @Field(() => DescriptorsContornoInputType, { nullable: true })
+  descriptors: DescriptorsContornoInputType;
 }
 
 @InputType()
 export class EditedContornoType {
   @Field({ nullable: true })
   contorno: string;
-  @Field(() => [String], { nullable: true })
-  descriptors: string[];
+  @Field(() => EditedDescriptorsContornoType, { nullable: true })
+  descriptors: EditedDescriptorsContornoType;
 }
 
 //ContornoDefinition
