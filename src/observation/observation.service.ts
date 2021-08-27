@@ -1,7 +1,6 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { DescriptorService } from 'src/descriptor/descriptor.service';
 import { Observation } from './model/observation.modelinterface';
 import { NewObservationType } from './type/observation.types.dto';
 import { DescriptorTypeService } from 'src/descriptorType/descriptorType.service';
@@ -14,32 +13,23 @@ export class ObservationService {
     private readonly DescriptorTypeService: DescriptorTypeService,
   ) {}
 
-  async findAllUseInformationObservations() {
-    const os = await this.ObservationModel.find({
-      tab: 'UseInformation',
+  async findByTab(tab: string) {
+    return this.ObservationModel.find({
+      tab: tab,
     })
       .populate({
         path: 'descriptorsTypes',
         model: 'DescriptorType',
         populate: { path: 'descriptors', model: 'Descriptor' },
       })
-      .exec();
-    console.log('findAllUseInformationObservations:', os);
-    return os;
-  }
-
-  async findAllOrderLemmaObservations() {
-    const os = await this.ObservationModel.find({
-      tab: 'OrderLemma',
-    })
-      .populate({
-        path: 'descriptorsTypes',
-        model: 'DescriptorType',
-        populate: { path: 'descriptors', model: 'Descriptor' },
+      .exec()
+      .then(observations => {
+        return observations;
       })
-      .exec();
-    console.log('findAllUseInformationObservations:', os);
-    return os;
+      .catch(e => {
+        Logger.verbose(e);
+        return e;
+      });
   }
 
   createObservation(NewObservation: NewObservationType) {
@@ -49,13 +39,26 @@ export class ObservationService {
       const ndt = this.DescriptorTypeService.createDescriptorType(element);
       descriptorTypesIDs.push(ndt.id);
     });
-    const o = new this.ObservationModel({
-      name: NewObservation.name,
-      tab: NewObservation.tab,
+
+    const { tab, name } = NewObservation;
+    return new this.ObservationModel({
+      name,
+      tab,
       descriptorsTypes: descriptorTypesIDs,
-    });
-    o.save();
-    console.log('createObservation:', o);
-    return o;
+    })
+      .save()
+      .then(no => {
+        return no
+          .populate({
+            path: 'descriptorsTypes',
+            model: 'DescriptorType',
+            populate: { path: 'descriptors', model: 'Descriptor' },
+          })
+          .execPopulate();
+      })
+      .catch(e => {
+        Logger.verbose(e);
+        return e;
+      });
   }
 }
