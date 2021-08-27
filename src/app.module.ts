@@ -14,7 +14,6 @@ import { ObservationModule } from './observation/observation.module';
     GraphQLModule.forRoot({ autoSchemaFile: 'schema.gql' }),
     FraseograficStudyModule,
     MinioModule,
-    ClasificationModule,
     DescriptorTypeModule,
     ObservationModule,
   ],
