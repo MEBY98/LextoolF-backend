@@ -1,21 +1,13 @@
 import { InputType, ObjectType, Field, ID } from '@nestjs/graphql';
 import { EntryType, NewEntryType } from 'src/entry/type/entry.type';
-import { AuthorType, NewAuthorType } from './author.type';
+import { DictionaryInfotype } from 'src/dictionaryInfo/type/dictionaryInfo.type';
 
 @ObjectType()
 export class DictionaryType {
   @Field(() => ID)
   id?: string;
   @Field()
-  name: string;
-  @Field()
-  shortName: string;
-  @Field(() => [AuthorType])
-  author: [AuthorType];
-  @Field()
-  annoOfPublication: number;
-  @Field()
-  reference: string;
+  dictionaryInfo: DictionaryInfotype;
   @Field(() => [String])
   letters: [string];
   @Field(() => [EntryType])
@@ -23,19 +15,23 @@ export class DictionaryType {
 }
 
 @ObjectType()
-export class EditDictionaryObjectType {
+export class DictionaryEntriesAsStringType {
+  @Field(() => ID)
+  id?: string;
+  @Field()
+  dictionaryInfo: DictionaryInfotype;
+  @Field(() => [String])
+  letters: [string];
+  @Field(() => [String])
+  entries: string[];
+}
+
+@ObjectType()
+export class DictionaryToEditType {
   @Field(() => ID, { nullable: true })
   id?: string;
   @Field()
-  name: string;
-  @Field()
-  shortName: string;
-  @Field(() => [AuthorType])
-  author: [AuthorType];
-  @Field()
-  annoOfPublication: number;
-  @Field()
-  reference: string;
+  dictionaryInfo: string;
   @Field(() => [String])
   letters: [string];
   @Field(() => [String], { nullable: true })
@@ -45,15 +41,7 @@ export class EditDictionaryObjectType {
 @InputType()
 export class NewDictionaryType {
   @Field()
-  name: string;
-  @Field()
-  shortName: string;
-  @Field(() => [NewAuthorType])
-  author: [NewAuthorType];
-  @Field()
-  annoOfPublication: number;
-  @Field()
-  reference: string;
+  dictionaryInfo: string;
   @Field(() => [String])
   letters: [string];
   @Field(() => [String], { nullable: true })
@@ -61,19 +49,11 @@ export class NewDictionaryType {
 }
 
 @InputType()
-export class EditDictionaryInputType {
+export class EditedDictionaryType {
   @Field(() => ID, { nullable: true })
   id?: string;
   @Field()
-  name: string;
-  @Field()
-  shortName: string;
-  @Field(() => [NewAuthorType])
-  author: [NewAuthorType];
-  @Field()
-  annoOfPublication: number;
-  @Field()
-  reference: string;
+  dictionaryInfo: string;
   @Field(() => [String])
   letters: [string];
   @Field(() => [String], { nullable: true })
