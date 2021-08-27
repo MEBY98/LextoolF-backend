@@ -12,11 +12,11 @@ export class DescriptorTypeType {
   name: string;
   @Field({ nullable: true })
   tab: string;
-  @Field(() => [DescriptorType])
+  @Field(() => [DescriptorType], { nullable: true })
   descriptors: DescriptorType[];
   @Field(() => String)
   inputType: string;
-  @Field(() => Boolean)
+  @Field({ nullable: true })
   multiInput: boolean;
 }
 
@@ -30,6 +30,6 @@ export class NewDescriptorTypeType {
   descriptors: NewDescriptorType[];
   @Field(() => String)
   inputType: string;
-  @Field(() => Boolean, { nullable: true })
+  @Field({ nullable: true })
   multiInput: boolean;
 }
