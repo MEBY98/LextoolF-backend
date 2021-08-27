@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Clasification } from './model/clasification.modelinterface';
@@ -16,8 +16,14 @@ export class ClasificationService {
   }
 
   createClasification(newClasification: NewClasificationtype) {
-    const c = new this.ClasificationModel(newClasification);
-    c.save();
-    return c;
+    return new this.ClasificationModel(newClasification)
+      .save()
+      .then(nc => {
+        return nc;
+      })
+      .catch(e => {
+        Logger.verbose(e);
+        return e;
+      });
   }
 }

@@ -10,8 +10,8 @@ export class ClasificationResolver {
   constructor(private readonly ClasificationService: ClasificationService) {}
 
   @Query(() => [Clasificationtype])
-  async getAllClasifications() {
-    return await this.ClasificationService.findAll();
+  getAllClasifications() {
+    return this.ClasificationService.findAll();
   }
 
   @Mutation(() => Clasificationtype)
