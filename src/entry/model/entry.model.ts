@@ -9,19 +9,9 @@ export const EntrySchema = new mongoose.Schema({
     type: [String],
     required: true,
   },
-  sublemmas: {
+  elements: {
     type: [mongoose.Schema.Types.ObjectId],
-    default: null,
-    ref: 'Sublemma',
-  },
-  lemma: {
-    type: mongoose.Schema.Types.ObjectId,
-    default: null,
-    ref: 'Lemma',
-  },
-  UFs: {
-    type: [mongoose.Schema.Types.ObjectId],
-    default: null,
-    ref: 'UF',
+    default: [],
+    ref: 'Element',
   },
 });

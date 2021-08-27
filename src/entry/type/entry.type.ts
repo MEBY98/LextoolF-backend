@@ -1,22 +1,11 @@
 import { InputType, ObjectType, Field, ID } from '@nestjs/graphql';
 import {
-  UFtype,
-  NewUFtype,
-  UFToEditType,
-  EditedUFType,
-} from '../../UF/type/UF.type';
-import {
-  Sublemmatype,
-  NewSublemmatype,
-  SublemmaToEdittype,
-  EditedSublemmaType,
-} from 'src/sublemma/type/sublemma.type';
-import {
-  Lemmatype,
-  NewLemmatype,
-  LemmaToEditType,
-  EditedLemmaType,
-} from 'src/lemma/type/lemma.type';
+  ElementType,
+  ElementToEditType,
+  NewElementType,
+  EditedElementType,
+  ElementDescriptorsAsStringType,
+} from 'src/element/type/element.type';
 
 @ObjectType()
 export class EntryType {
@@ -26,12 +15,8 @@ export class EntryType {
   letter: string;
   @Field(() => [String])
   context: string[];
-  @Field(() => Lemmatype, { nullable: true })
-  lemma: Lemmatype;
-  @Field(() => [Sublemmatype])
-  sublemmas: Sublemmatype[];
-  @Field(() => [UFtype])
-  UFs: UFtype[];
+  @Field(() => [ElementDescriptorsAsStringType], { nullable: true })
+  elements: ElementDescriptorsAsStringType[];
 }
 
 @ObjectType()
@@ -42,12 +27,8 @@ export class EntryToEditType {
   letter: string;
   @Field(() => [String])
   context: string[];
-  @Field(() => LemmaToEditType, { nullable: true })
-  lemma: LemmaToEditType;
-  @Field(() => [SublemmaToEdittype], { nullable: true })
-  sublemmas: SublemmaToEdittype[];
-  @Field(() => [UFToEditType])
-  UFs: UFToEditType[];
+  @Field(() => [ElementToEditType], { nullable: true })
+  elements: ElementToEditType[];
 }
 
 @InputType()
@@ -56,12 +37,8 @@ export class NewEntryType {
   letter: string;
   @Field(() => [String])
   context: string[];
-  @Field(() => NewLemmatype, { nullable: true })
-  lemma: NewLemmatype;
-  @Field(() => [NewSublemmatype])
-  sublemmas: [NewSublemmatype];
-  @Field(() => [NewUFtype])
-  UFs: [NewUFtype];
+  @Field(() => [NewElementType], { nullable: true })
+  elements: NewElementType[];
 }
 
 @InputType()
@@ -72,10 +49,6 @@ export class EditedEntryType {
   letter: string;
   @Field(() => [String])
   context: string[];
-  @Field(() => EditedLemmaType, { nullable: true })
-  lemma: EditedLemmaType;
-  @Field(() => [EditedSublemmaType], { nullable: true })
-  sublemmas: EditedSublemmaType[];
-  @Field(() => [EditedUFType])
-  UFs: EditedUFType[];
+  @Field(() => [EditedElementType], { nullable: true })
+  elements: EditedElementType[];
 }

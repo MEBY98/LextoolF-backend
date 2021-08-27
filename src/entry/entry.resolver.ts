@@ -11,14 +11,9 @@ import {
 export class EntryResolver {
   constructor(private readonly EntryService: EntryService) {}
 
-  @Query(() => [EntryType])
-  async getAllEntries() {
-    return await this.EntryService.findAll();
-  }
-
   @Query(() => EntryToEditType)
   async getEntryByID(@Args('entryID') entryID: string) {
-    return await this.EntryService.findById(entryID);
+    return await this.EntryService.findByIdAsync(entryID);
   }
 
   @Query(() => [String])
@@ -26,14 +21,8 @@ export class EntryResolver {
     return await this.EntryService.entryUbicationsByID(entryID);
   }
 
-  @Mutation(() => [EntryType])
-  async createEntry(@Args('entry') entry: NewEntryType) {
-    const result = await this.EntryService.createEntry(entry);
-    console.log('fromresolverResult:', result);
-  }
-
   @Mutation(() => EntryType)
   async editEntry(@Args('entry') entry: EditedEntryType) {
-    const result = await this.EntryService.updateEntry(entry);
+    return await this.EntryService.updateEntry(entry);
   }
 }
