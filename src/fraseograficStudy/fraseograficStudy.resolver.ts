@@ -3,14 +3,14 @@ import { FraseograficStudyService } from './fraseograficStudy.service';
 import {
   FraseograficStudyType,
   NewfraseograficStudyType,
-  EditfraseograficStudyType,
-  EditfraseograficStudyObjectType,
+  EditedfraseograficStudyType,
+  FraseograficStudyToEditType,
 } from './type/fraseograficStudy.types';
-import {
-  NewDictionaryType,
-  DictionaryType,
-  EditDictionaryObjectType,
-} from 'src/dictionary/type/dictionary.types';
+// import {
+//   NewDictionaryType,
+//   DictionaryType,
+//   EditDictionaryObjectType,
+// } from 'src/dictionary/type/dictionary.types';
 
 @Resolver()
 export class FraseograficStudyResolver {
@@ -23,7 +23,7 @@ export class FraseograficStudyResolver {
     return this.fraseograficStudyService.findall();
   }
 
-  @Query(() => EditfraseograficStudyObjectType)
+  @Query(() => FraseograficStudyToEditType)
   async getStudyByID(@Args('studyID') studyID: string) {
     return this.fraseograficStudyService.findByID(studyID);
   }
@@ -41,19 +41,19 @@ export class FraseograficStudyResolver {
     return this.fraseograficStudyService.deleteStudy(studyID);
   }
 
-  @Mutation(() => EditDictionaryObjectType)
-  async createDictionaryByStudyID(
-    @Args('newDictionary') newDictionary: NewDictionaryType,
-    @Args('studyID') studyID: string,
-  ) {
-    return this.fraseograficStudyService.createDictionaryByStudyID(
-      newDictionary,
-      studyID,
-    );
-  }
+  // @Mutation(() => EditDictionaryObjectType)
+  // async createDictionaryByStudyID(
+  //   @Args('newDictionary') newDictionary: NewDictionaryType,
+  //   @Args('studyID') studyID: string,
+  // ) {
+  //   return this.fraseograficStudyService.createDictionaryByStudyID(
+  //     newDictionary,
+  //     studyID,
+  //   );
+  // }
 
   @Mutation(() => FraseograficStudyType)
-  async editStudy(@Args('newStudy') newStudy: EditfraseograficStudyType) {
+  async editStudy(@Args('newStudy') newStudy: EditedfraseograficStudyType) {
     return this.fraseograficStudyService.editStudy(newStudy);
   }
 }
