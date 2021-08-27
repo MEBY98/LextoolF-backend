@@ -5,9 +5,4 @@ export const UbicationSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  clasifications: {
-    type: [mongoose.Schema.Types.ObjectId],
-    required: true,
-    ref: 'Clasification',
-  },
 });
