@@ -7,6 +7,100 @@ type DescriptorType {
   description: String
 }
 
+type ContornoDefinitionObjectType {
+  definition: String
+  typeOfDefinition: DescriptorType
+  argumentalSchema: DescriptorType
+  relationship: [DescriptorType!]
+  contorno: String
+  typeOfContorno: [DescriptorType!]
+  positionOfContorno: [DescriptorType!]
+  formatOfContorno: [DescriptorType!]
+}
+
+type ContornoDefinitionToEditType {
+  definition: String
+  typeOfDefinition: String
+  argumentalSchema: String!
+  relationship: [String!]
+  contorno: String
+  typeOfContorno: [String!]
+  positionOfContorno: [String!]
+  formatOfContorno: [String!]
+}
+
+type GeneralDescriptionObjectType {
+  tipo: DescriptorType
+  structure: DescriptorType
+  conceptualDomain: DescriptorType
+}
+
+type GeneralDescriptionToEditType {
+  tipo: String
+  structure: String
+  conceptualDomain: String
+}
+
+type OrderLemmaObjectType {
+  order: [DescriptorType!]
+  criteriaOfLematization: [DescriptorType!]
+  formalStructure: [DescriptorType!]
+  ubicationOfContorno: DescriptorType
+  typeOfVariant: [DescriptorType!]
+  formatOfVariant: [DescriptorType!]
+  tipographyOfVariant: [DescriptorType!]
+}
+
+type OrderLemmaToEditType {
+  order: [String!]
+  criteriaOfLematization: [String!]
+  formalStructure: [String!]
+  ubicationOfContorno: String
+  typeOfVariant: [String!]
+  formatOfVariant: [String!]
+  tipographyOfVariant: [String!]
+}
+
+type UseInformationObjectType {
+  anotation: String
+  position: DescriptorType
+  format: DescriptorType
+  tipography: DescriptorType
+}
+
+type UseInformationToEditType {
+  anotation: String
+  position: String
+  format: String
+  tipography: String
+}
+
+type ExampleObjectType {
+  anotation: String
+  typeOfExample: [DescriptorType!]
+  formatOfExample: [DescriptorType!]
+  functionOfExample: [DescriptorType!]
+}
+
+type ExampleToEditType {
+  anotation: String
+  typeOfExample: [String!]
+  formatOfExample: [String!]
+  functionOfExample: [String!]
+}
+
+type ParadigmaticInfoObjectType {
+  typeOfRelationship: DescriptorType
+  formOfPresentation: [DescriptorType!]
+  position: [DescriptorType!]
+}
+
+type ParadigmaticInfoToEditType {
+  typeOfRelationship: String
+  formOfPresentation: [String!]
+  position: [String!]
+}
+
 type Clasificationtype {
   id: ID!
   clasification: String!
@@ -15,162 +109,99 @@ type Clasificationtype {
 type Ubicationtype {
   id: ID!
   ubication: String!
-  clasifications: [Clasificationtype!]!
 }
 
-type DescriptorsDefinitionObjectType {
-  typeOfDefinition: DescriptorType
-  relationship: [DescriptorType!]
-}
-
-type DescriptorsDefinitionToEditType {
-  typeOfDefinition: String
-  relationship: [String!]
-}
-
-type DefinitionObjectType {
-  definition: String!
-  descriptors: DescriptorsDefinitionObjectType!
-}
-
-type DefinitionToEditType {
-  definition: String
-  descriptors: DescriptorsDefinitionToEditType
-}
-
-type ContornoObjectType {
-  contorno: String!
-  descriptors: [DescriptorType!]!
-}
-
-type ContornoToEditType {
-  contorno: String
-  descriptors: [String!]
-}
-
-type ContornoDefinitionObjectType {
-  definition: DefinitionObjectType!
-  contorno: ContornoObjectType!
-}
-
-type ContornoDefinitionToEditType {
-  definition: DefinitionToEditType
-  contorno: ContornoToEditType
-}
-
-type ExampleObjectType {
-  anotation: String
-  typeOfExample: DescriptorType
-  formatOfExample: [DescriptorType!]
-  functionOfExample: [DescriptorType!]
-}
-
-type ExampleToEditType {
-  anotation: String
-  typeOfExample: String
-  formatOfExample: [String!]
-  functionOfExample: [String!]
-}
-
-type UseInformationObjectType {
-  anotation: String
-  descriptors: [DescriptorType!]
-}
-
-type UseInformationToEditType {
-  anotation: String
-  descriptors: [String!]
-}
-
-type UFtype {
+type ElementType {
   id: ID!
-  UF: String!
+  element: String!
+  clasification: Clasificationtype!
   ubication: Ubicationtype!
-  generalDescription: [DescriptorType!]
+  generalDescription: GeneralDescriptionObjectType
+  orderLemma: OrderLemmaObjectType
   useInformation: [UseInformationObjectType!]
-  orderLemma: [[DescriptorType!]!]
-  ContornoDefinition: [ContornoDefinitionObjectType!]
+  contornoDefinition: [ContornoDefinitionObjectType!]
   example: ExampleObjectType
-  paradigmaticInfo: [[DescriptorType!]!]
+  paradigmaticInfo: ParadigmaticInfoObjectType
 }
 
-type UFToEditType {
+type ElementDescriptorsAsStringType {
   id: ID!
-  UF: String!
-  ubication: String!
-  generalDescription: [String!]
+  element: String!
+  clasification: Clasificationtype!
+  ubication: Ubicationtype!
+  generalDescription: GeneralDescriptionToEditType
+  orderLemma: OrderLemmaToEditType
   useInformation: [UseInformationToEditType!]
-  orderLemma: [[String!]!]
-  ContornoDefinition: [ContornoDefinitionToEditType!]
+  contornoDefinition: [ContornoDefinitionToEditType!]
   example: ExampleToEditType
-  paradigmaticInfo: [String!]
+  paradigmaticInfo: ParadigmaticInfoToEditType
 }
 
-type Sublemmatype {
+type ElementToEditType {
   id: ID!
-  sublemma: String!
-  clasification: Clasificationtype!
-}
-
-type SublemmaToEdittype {
-  id: ID!
-  sublemma: String!
+  element: String!
   clasification: String!
-}
-
-type Lemmatype {
-  id: ID!
-  lemma: String!
-  clasification: Clasificationtype!
-}
-
-type LemmaToEditType {
-  id: ID!
-  lemma: String!
-  clasification: String!
+  ubication: String!
+  generalDescription: GeneralDescriptionToEditType
+  orderLemma: OrderLemmaToEditType
+  useInformation: [UseInformationToEditType!]
+  contornoDefinition: [ContornoDefinitionToEditType!]
+  example: ExampleToEditType
+  paradigmaticInfo: ParadigmaticInfoToEditType
 }
 
 type EntryType {
   id: ID!
   letter: String!
   context: [String!]!
-  lemma: Lemmatype
-  sublemmas: [Sublemmatype!]!
-  UFs: [UFtype!]!
+  elements: [ElementDescriptorsAsStringType!]
 }
 
 type EntryToEditType {
   id: ID!
   letter: String!
   context: [String!]!
-  lemma: LemmaToEditType
-  sublemmas: [SublemmaToEdittype!]
-  UFs: [UFToEditType!]!
+  elements: [ElementToEditType!]
 }
 
-type AuthorType {
+type Authortype {
+  id: ID!
   name: String!
   siglas: String!
 }
 
-type DictionaryType {
+type AuthorToEditType {
+  id: ID
+  name: String!
+  siglas: String!
+}
+
+type DictionaryInfotype {
   id: ID!
   name: String!
-  shortName: String!
-  author: [AuthorType!]!
+  siglas: String!
+  author: [Authortype!]!
   annoOfPublication: Float!
   reference: String!
+}
+
+type DictionaryType {
+  id: ID!
+  dictionaryInfo: DictionaryInfotype!
   letters: [String!]!
   entries: [EntryType!]!
 }
 
-type EditDictionaryObjectType {
+type DictionaryEntriesAsStringType {
+  id: ID!
+  dictionaryInfo: DictionaryInfotype!
+  letters: [String!]!
+  entries: [String!]!
+}
+
+type DictionaryToEditType {
   id: ID
-  name: String!
-  shortName: String!
-  author: [AuthorType!]!
-  annoOfPublication: Float!
-  reference: String!
+  dictionaryInfo: String!
   letters: [String!]!
   entries: [String!]
 }
@@ -178,26 +209,28 @@ type EditDictionaryObjectType {
 type FraseograficStudyType {
   id: ID!
   name: String!
-  period: String!
+  initYear: Float!
+  finalYear: Float!
   state: String!
-  dictionaries: [DictionaryType!]!
+  dictionaries: [DictionaryEntriesAsStringType!]
 }
 
-type EditfraseograficStudyObjectType {
+type FraseograficStudyToEditType {
   id: ID!
   name: String!
-  period: String!
+  initYear: Float!
+  finalYear: Float!
   state: String!
-  dictionaries: [EditDictionaryObjectType!]!
+  dictionaries: [DictionaryToEditType!]
 }
 
 type DescriptorTypeType {
-  id: ID!
+  id: ID
   name: String!
   tab: String
-  descriptors: [DescriptorType!]!
+  descriptors: [DescriptorType!]
   inputType: String!
-  multiInput: Boolean!
+  multiInput: Boolean
 }
 
 type ObservationType {
@@ -209,82 +242,70 @@ type ObservationType {
 
 type Query {
   getAllStudies: [FraseograficStudyType!]!
-  getStudyByID(studyID: String!): EditfraseograficStudyObjectType!
+  getStudyByID(studyID: String!): FraseograficStudyToEditType!
   getAllDictionaries: [DictionaryType!]!
   getDictionaryByID(dictionaryID: String!): DictionaryType!
-  getAllEntries: [EntryType!]!
   getEntryByID(entryID: String!): EntryToEditType!
   getEntryUbicationsByID(entryID: String!): [String!]!
-  getAllDescriptors: [DescriptorType!]!
-  getAllUFs: [UFtype!]!
   getAllUbications: [Ubicationtype!]!
-  getAllLemmaClasifications: [Clasificationtype!]!
-  getAllSublemmaClasifications: [Clasificationtype!]!
+  getAllElements: [ElementType!]!
+  getUbicationByElementID(elementID: String!): Ubicationtype!
   getAllClasifications: [Clasificationtype!]!
+  getAllAuthors: [Authortype!]!
+  getAuthorById(id: String!): AuthorToEditType!
+  getAllDictionaryInfo: [DictionaryInfotype!]!
+  getDictionaryInfoById(id: String!): DictionaryInfotype!
   getAllDescriptorsTypes: [DescriptorTypeType!]!
-  getAllGeneralDescriptionDescriptorsTypes: [DescriptorTypeType!]!
-  getAllDefinitionDescriptorsTypes: [DescriptorTypeType!]!
-  getAllContornoDescriptorsTypes: [DescriptorTypeType!]!
-  getAllExampleDescriptorsTypes: [DescriptorTypeType!]!
-  getAllParadigmaticInfoDescriptorsTypes: [DescriptorTypeType!]!
-  getAllUseInformationObservations: [ObservationType!]!
-  getAllOrderLemmaObservations: [ObservationType!]!
+  getDescriptorsTypesByTab(tab: String!): [DescriptorTypeType!]!
+  getAllDescriptors: [DescriptorType!]!
+  getObservationsByTab(tab: String!): [ObservationType!]!
 }
 
 type Mutation {
   createStudy(fraseograficStudy: NewfraseograficStudyType!): FraseograficStudyType!
   deleteStudyByID(studyID: String!): FraseograficStudyType!
-  createDictionaryByStudyID(studyID: String!, newDictionary: NewDictionaryType!): EditDictionaryObjectType!
-  editStudy(newStudy: EditfraseograficStudyType!): FraseograficStudyType!
+  editStudy(newStudy: EditedfraseograficStudyType!): FraseograficStudyType!
   createEntryByDictionaryID(dictionaryID: String!, newEntry: NewEntryType!): EntryType!
   deleteEntryByDictionaryID(dictionaryID: String!, entryID: String!): Boolean!
-  createEntry(entry: NewEntryType!): [EntryType!]!
   editEntry(entry: EditedEntryType!): EntryType!
-  createUF(newUF: NewUFtype!): UFtype!
   createUbication(newUbication: NewUbicationtype!): Ubicationtype!
+  createElement(newElement: NewElementType!): ElementType!
   createClasification(newClasification: NewClasificationtype!): Clasificationtype!
+  createAuthor(newAuthor: NewAuthortype!): Authortype!
+  editAuthor(editedAuthor: EditedAuthorType!): Authortype!
+  createDictionaryInfo(newDictionaryInfo: NewDictionaryInfotype!): DictionaryInfotype!
+  editDictionaryInfo(editedDictionaryInfo: EditedDictionaryInfotype!): DictionaryInfotype!
   createDescriptorType(newDescriptorType: NewDescriptorTypeType!): DescriptorTypeType!
-  createDescriptorByDescriptorType(descriptor: NewDescriptorType!, descriptorTypeID: String!): DescriptorType!
+  createDescriptorByDescriptorType(descriptor: NewDescriptorType!, descriptorTypeID: String!): DescriptorTypeType!
   createObservation(newObservationType: NewObservationType!): ObservationType!
 }
 
 input NewfraseograficStudyType {
   name: String!
-  period: String!
+  initYear: Float!
+  finalYear: Float!
   state: String
   dictionaries: [NewDictionaryType!]
 }
 
 input NewDictionaryType {
-  name: String!
-  shortName: String!
-  author: [NewAuthorType!]!
-  annoOfPublication: Float!
-  reference: String!
+  dictionaryInfo: String!
   letters: [String!]!
   entries: [String!]
 }
 
-input NewAuthorType {
-  name: String!
-  siglas: String!
-}
-
-input EditfraseograficStudyType {
+input EditedfraseograficStudyType {
   id: ID!
   name: String!
-  period: String!
+  initYear: Float!
+  finalYear: Float!
   state: String
-  dictionaries: [EditDictionaryInputType!]
+  dictionaries: [EditedDictionaryType!]
 }
 
-input EditDictionaryInputType {
+input EditedDictionaryType {
   id: ID
-  name: String!
-  shortName: String!
-  author: [NewAuthorType!]!
-  annoOfPublication: Float!
-  reference: String!
+  dictionaryInfo: String!
   letters: [String!]!
   entries: [String!]
 }
@@ -292,136 +313,169 @@ input EditDictionaryInputType {
 input NewEntryType {
   letter: String!
   context: [String!]!
-  lemma: NewLemmatype
-  sublemmas: [NewSublemmatype!]!
-  UFs: [NewUFtype!]!
+  elements: [NewElementType!]
 }
 
-input NewLemmatype {
-  lemma: String!
+input NewElementType {
+  element: String!
   clasification: String!
-}
-
-input NewSublemmatype {
-  sublemma: String!
-  clasification: String!
-}
-
-input NewUFtype {
-  UF: String!
   ubication: String!
-  generalDescription: [String!]
+  generalDescription: GeneralDescriptionInputType
+  orderLemma: OrderLemmaInputType
   useInformation: [UseInformationInputType!]
-  orderLemma: [[String!]!]
-  ContornoDefinition: [ContornoDefinitionInputType!]
+  contornoDefinition: [ContornoDefinitionInputType!]
   example: ExampleInputType
-  paradigmaticInfo: [String!]
+  paradigmaticInfo: ParadigmaticInfoInputType
+}
+
+input GeneralDescriptionInputType {
+  tipo: String
+  structure: String
+  conceptualDomain: String
+}
+
+input OrderLemmaInputType {
+  order: [String!]
+  criteriaOfLematization: [String!]
+  formalStructure: [String!]
+  ubicationOfContorno: String
+  typeOfVariant: [String!]
+  formatOfVariant: [String!]
+  tipographyOfVariant: [String!]
 }
 
 input UseInformationInputType {
   anotation: String
-  descriptors: [String!]
+  position: String
+  format: String
+  tipography: String
 }
 
 input ContornoDefinitionInputType {
-  definition: DefinitionInputType
-  contorno: ContornoInputType
-}
-
-input DefinitionInputType {
   definition: String
-  descriptors: DescriptorsDefinitionInputType
-}
-
-input DescriptorsDefinitionInputType {
   typeOfDefinition: String
+  argumentalSchema: String
   relationship: [String!]
-}
-
-input ContornoInputType {
   contorno: String
-  descriptors: [String!]
+  typeOfContorno: [String!]
+  positionOfContorno: [String!]
+  formatOfContorno: [String!]
 }
 
 input ExampleInputType {
   anotation: String
-  typeOfExample: String
+  typeOfExample: [String!]
   formatOfExample: [String!]
   functionOfExample: [String!]
+}
+
+input ParadigmaticInfoInputType {
+  typeOfRelationship: String
+  formOfPresentation: [String!]
+  position: [String!]
 }
 
 input EditedEntryType {
   id: ID!
   letter: String!
   context: [String!]!
-  lemma: EditedLemmaType
-  sublemmas: [EditedSublemmaType!]
-  UFs: [EditedUFType!]!
+  elements: [EditedElementType!]
 }
 
-input EditedLemmaType {
+input EditedElementType {
   id: ID
-  lemma: String!
+  element: String!
   clasification: String!
-}
-
-input EditedSublemmaType {
-  id: ID
-  sublemma: String!
-  clasification: String!
-}
-
-input EditedUFType {
-  id: ID
-  UF: String!
   ubication: String!
-  generalDescription: [String!]
+  generalDescription: EditedGeneralDescriptionType
+  orderLemma: EditedOrderLemmaType
   useInformation: [EditedUseInformationType!]
-  orderLemma: [[String!]!]
-  ContornoDefinition: [EditedContornoDefinitionType!]
+  contornoDefinition: [EditedContornoDefinitionType!]
   example: EditedExampleType
-  paradigmaticInfo: [String!]
+  paradigmaticInfo: EditedParadigmaticInfoType
+}
+
+input EditedGeneralDescriptionType {
+  tipo: String
+  structure: String
+  conceptualDomain: String
+}
+
+input EditedOrderLemmaType {
+  order: [String!]
+  criteriaOfLematization: [String!]
+  formalStructure: [String!]
+  ubicationOfContorno: String
+  typeOfVariant: [String!]
+  formatOfVariant: [String!]
+  tipographyOfVariant: [String!]
 }
 
 input EditedUseInformationType {
   anotation: String
-  descriptors: [String!]
+  position: String
+  format: String
+  tipography: String
 }
 
 input EditedContornoDefinitionType {
-  definition: EditedDefinitionType
-  contorno: EditedContornoType
-}
-
-input EditedDefinitionType {
-  definition: String
-  descriptors: EditedDescriptorsDefinitionType
-}
-
-input EditedDescriptorsDefinitionType {
-  typeOfDefinition: String
+  definition: String!
+  typeOfDefinition: String!
+  argumentalSchema: String!
   relationship: [String!]
-}
-
-input EditedContornoType {
-  contorno: String
-  descriptors: [String!]
+  contorno: String!
+  typeOfContorno: [String!]
+  positionOfContorno: [String!]
+  formatOfContorno: [String!]
 }
 
 input EditedExampleType {
   anotation: String
-  typeOfExample: String
+  typeOfExample: [String!]
   formatOfExample: [String!]
   functionOfExample: [String!]
 }
 
+input EditedParadigmaticInfoType {
+  typeOfRelationship: String
+  formOfPresentation: [String!]
+  position: [String!]
+}
+
 input NewUbicationtype {
   ubication: String!
-  clasifications: [String!]!
 }
 
 input NewClasificationtype {
   clasification: String!
+}
+
+input NewAuthortype {
+  name: String!
+  siglas: String!
+}
+
+input EditedAuthorType {
+  id: ID
+  name: String!
+  siglas: String!
+}
+
+input NewDictionaryInfotype {
+  name: String!
+  siglas: String!
+  author: [String!]!
+  annoOfPublication: Float!
+  reference: String!
+}
+
+input EditedDictionaryInfotype {
+  id: ID
+  name: String!
+  siglas: String!
+  author: [String!]!
+  annoOfPublication: Float!
+  reference: String!
 }
 
 input NewDescriptorTypeType {

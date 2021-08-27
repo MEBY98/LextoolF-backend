@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { DescriptorType } from './model/descriptorType.modelinterface';
@@ -17,113 +17,110 @@ export class DescriptorTypeService {
     private readonly DescriptorService: DescriptorService,
   ) {}
 
-  async findAll() {
-    const dts = await this.DescriptorTypeModel.find()
+  findAll() {
+    return this.DescriptorTypeModel.find()
       .populate({ path: 'descriptors', model: 'Descriptor' })
-      .exec();
-    console.log('findallDescriptorsTypes:', dts);
-    return dts;
+      .exec()
+      .then(allDescriptors => {
+        return allDescriptors;
+      })
+      .catch(e => {
+        Logger.verbose(e);
+        return e;
+      });
   }
 
-  async findAllGeneralDescriptionDescriptorsTypes() {
-    const dts = await this.DescriptorTypeModel.find({
-      tab: 'GeneralDescription',
+  findByTab(tab: string) {
+    return this.DescriptorTypeModel.find({
+      tab: tab,
     })
       .populate({ path: 'descriptors', model: 'Descriptor' })
-      .exec();
-    console.log('findAllGeneralDescriptionDescriptorsTypes:', dts);
-    return dts;
+      .exec()
+      .then(allDescriptors => {
+        return allDescriptors;
+      })
+      .catch(e => {
+        Logger.verbose(e);
+        return e;
+      });
   }
 
-  async findAllDefinitionDescriptorsTypes() {
-    const dts = await this.DescriptorTypeModel.find({
-      tab: 'Definition',
+  createDescriptorTypeAsync(NewDescriptorType: NewDescriptorTypeType) {
+    const descriptorIDs = [];
+    NewDescriptorType.descriptors.forEach(element => {
+      const nd = this.DescriptorService.createDescriptor(element);
+      descriptorIDs.push(nd.id);
+    });
+    const { inputType, multiInput, name, tab } = NewDescriptorType;
+    return new this.DescriptorTypeModel({
+      inputType,
+      multiInput,
+      name,
+      tab,
+      descriptors: descriptorIDs,
     })
-      .populate({ path: 'descriptors', model: 'Descriptor' })
-      .exec();
-    console.log('findAllDefinitionDescriptorsTypes:', dts);
-    return dts;
-  }
-  async findAllContornoDescriptorsTypes() {
-    const dts = await this.DescriptorTypeModel.find({
-      tab: 'Contorno',
-    })
-      .populate({ path: 'descriptors', model: 'Descriptor' })
-      .exec();
-    console.log('findAllContornoDescriptorsTypes:', dts);
-    return dts;
-  }
-
-  async findAllExampleDescriptorsTypes() {
-    const dts = await this.DescriptorTypeModel.find({
-      tab: 'Example',
-    })
-      .populate({ path: 'descriptors', model: 'Descriptor' })
-      .exec();
-    console.log('findAllExampleDescriptorsTypes:', dts);
-    return dts;
-  }
-
-  async findAllParadigmaticInfoDescriptorsTypes() {
-    const dts = await this.DescriptorTypeModel.find({
-      tab: 'ParadigmaticInfo',
-    })
-      .populate({ path: 'descriptors', model: 'Descriptor' })
-      .exec();
-    console.log('findAllParadigmaticInfoDescriptorsTypes:', dts);
-    return dts;
+      .save()
+      .then(nd => {
+        return nd
+          .populate({ path: 'descriptors', model: 'Descriptor' })
+          .execPopulate();
+      })
+      .catch(e => {
+        Logger.verbose(e);
+        return e;
+      });
   }
 
   createDescriptorType(NewDescriptorType: NewDescriptorTypeType) {
     const descriptorIDs = [];
-
     if (NewDescriptorType.descriptors) {
-      if (NewDescriptorType.descriptors.length > 0) {
-        NewDescriptorType.descriptors.forEach(element => {
-          const nd = this.DescriptorService.createDescriptor(element);
-          descriptorIDs.push(nd.id);
-        });
-      }
+      NewDescriptorType.descriptors.forEach(element => {
+        const nd = this.DescriptorService.createDescriptor(element);
+        descriptorIDs.push(nd.id);
+      });
     }
-
-    const dt = new this.DescriptorTypeModel({
+    const { inputType, multiInput, name, tab } = NewDescriptorType;
+    const result = new this.DescriptorTypeModel({
+      inputType,
+      multiInput,
+      name,
+      tab,
       descriptors: descriptorIDs,
-      inputType: NewDescriptorType.inputType,
-      name: NewDescriptorType.name,
-      multiInput: NewDescriptorType.multiInput,
-      tab: NewDescriptorType.tab,
     });
-    dt.save();
-    console.log('createDescriptorType:', dt);
-    return dt;
+    result.save();
+    return result;
   }
 
-  async createDescriptorByDescriptorType(
+  createDescriptorByDescriptorType(
     descriptorTypeID: string,
     descriptor: NewDescriptorType,
   ) {
-    const dt = await this.DescriptorTypeModel.findById(descriptorTypeID);
-    if (!dt) {
-      throw new Error('Descriptor Type dont exist');
-    } else {
-      const dModel = this.DescriptorService.createDescriptor(descriptor);
-      dt.descriptors.push(dModel.id);
-
-      await this.DescriptorTypeModel.findByIdAndUpdate(
-        descriptorTypeID,
-        dt,
-      ).exec();
-      console.log('createDictionaryByStudyID:', dModel);
-      return dModel;
-    }
-  }
-
-  createManyDescriptorType(NewsDescriptorType: [NewDescriptorTypeType]) {
-    const result = [];
-    NewsDescriptorType.forEach(nd => {
-      const ndModel = this.createDescriptorType(nd);
-      result.push(ndModel);
-    });
-    return null;
+    return this.DescriptorTypeModel.findById(descriptorTypeID)
+      .then(dt => {
+        if (!dt) {
+          throw new Error('Descriptor Type dont exist');
+        } else {
+          const nd = this.DescriptorService.createDescriptor(descriptor);
+          dt.descriptors.push(nd.id);
+          return dt
+            .save()
+            .then(editeddt => {
+              return editeddt
+                .populate({
+                  path: 'descriptors',
+                  model: 'Descriptor',
+                })
+                .execPopulate();
+            })
+            .catch(e => {
+              Logger.verbose(e);
+              return e;
+            });
+        }
+      })
+      .catch(e => {
+        Logger.verbose(e);
+        return e;
+      });
   }
 }

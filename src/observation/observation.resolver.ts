@@ -10,13 +10,8 @@ export class ObservationResolver {
   constructor(private readonly observationService: ObservationService) {}
 
   @Query(() => [ObservationType])
-  async getAllUseInformationObservations() {
-    return await this.observationService.findAllUseInformationObservations();
-  }
-
-  @Query(() => [ObservationType])
-  async getAllOrderLemmaObservations() {
-    return await this.observationService.findAllOrderLemmaObservations();
+  async getObservationsByTab(@Args('tab') tab: string) {
+    return await this.observationService.findByTab(tab);
   }
 
   @Mutation(() => ObservationType)

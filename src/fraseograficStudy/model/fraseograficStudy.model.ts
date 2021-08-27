@@ -6,17 +6,21 @@ export const fraseograficStudySchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  period: {
-    type: String,
+  initYear: {
+    type: Number,
+    required: true,
+  },
+  finalYear: {
+    type: Number,
     required: true,
   },
   dictionaries: {
     type: [mongoose.Schema.Types.ObjectId],
-    default: [],
     ref: 'Dictionary',
+    default: [],
   },
   state: {
     type: String,
-    default: 'Ejecucion',
+    default: 'Ejecución',
   },
 });

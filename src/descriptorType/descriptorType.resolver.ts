@@ -18,34 +18,18 @@ export class DescriptorTypeResolver {
     return this.DescriptorTypeService.findAll();
   }
   @Query(() => [DescriptorTypeType])
-  async getAllGeneralDescriptionDescriptorsTypes() {
-    return await this.DescriptorTypeService.findAllGeneralDescriptionDescriptorsTypes();
+  async getDescriptorsTypesByTab(@Args('tab') tab: string) {
+    return await this.DescriptorTypeService.findByTab(tab);
   }
-  @Query(() => [DescriptorTypeType])
-  async getAllDefinitionDescriptorsTypes() {
-    return await this.DescriptorTypeService.findAllDefinitionDescriptorsTypes();
-  }
-  @Query(() => [DescriptorTypeType])
-  async getAllContornoDescriptorsTypes() {
-    return await this.DescriptorTypeService.findAllContornoDescriptorsTypes();
-  }
-  @Query(() => [DescriptorTypeType])
-  async getAllExampleDescriptorsTypes() {
-    return await this.DescriptorTypeService.findAllExampleDescriptorsTypes();
-  }
-  @Query(() => [DescriptorTypeType])
-  async getAllParadigmaticInfoDescriptorsTypes() {
-    return await this.DescriptorTypeService.findAllParadigmaticInfoDescriptorsTypes();
-  }
-
   @Mutation(() => DescriptorTypeType)
   createDescriptorType(
     @Args('newDescriptorType') newDescriptorType: NewDescriptorTypeType,
   ) {
-    return this.DescriptorTypeService.createDescriptorType(newDescriptorType);
+    return this.DescriptorTypeService.createDescriptorTypeAsync(
+      newDescriptorType,
+    );
   }
-
-  @Mutation(() => DescriptorType)
+  @Mutation(() => DescriptorTypeType)
   createDescriptorByDescriptorType(
     @Args('descriptorTypeID') descriptorTypeID: string,
     @Args('descriptor') descriptor: NewDescriptorType,
@@ -55,10 +39,4 @@ export class DescriptorTypeResolver {
       descriptor,
     );
   }
-  // @Mutation()
-  // createMoreDescriptorType(
-  //   @Args('newsDescriptorType') newsDescriptorType: [NewDescriptorTypeType],
-  // ) {
-  //   this.DescriptorTypeService.createManyDescriptorType(newsDescriptorType);
-  // }
 }

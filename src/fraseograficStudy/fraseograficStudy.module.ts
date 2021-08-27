@@ -9,7 +9,6 @@ import { DictionaryModule } from 'src/dictionary/dictionary.module';
   imports: [
     MongooseModule.forFeature([
       { name: 'fraseograficStudy', schema: fraseograficStudySchema },
-      // { name: 'Dictionary', schema: DictionarySchema },
     ]),
     DictionaryModule,
   ],

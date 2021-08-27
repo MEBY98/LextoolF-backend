@@ -2,8 +2,9 @@ import { InputType, ObjectType, Field, ID } from '@nestjs/graphql';
 import {
   DictionaryType,
   NewDictionaryType,
-  EditDictionaryObjectType,
-  EditDictionaryInputType,
+  DictionaryToEditType,
+  EditedDictionaryType,
+  DictionaryEntriesAsStringType,
 } from 'src/dictionary/type/dictionary.types';
 
 @ObjectType()
@@ -13,25 +14,29 @@ export class FraseograficStudyType {
   @Field()
   name: string;
   @Field()
-  period: string;
+  initYear: number;
+  @Field()
+  finalYear: number;
   @Field()
   state: string;
-  @Field(() => [DictionaryType])
-  dictionaries: [DictionaryType];
+  @Field(() => [DictionaryEntriesAsStringType], { nullable: true })
+  dictionaries: [DictionaryEntriesAsStringType];
 }
 
 @ObjectType()
-export class EditfraseograficStudyObjectType {
+export class FraseograficStudyToEditType {
   @Field(() => ID)
   id?: string;
   @Field()
   name: string;
   @Field()
-  period: string;
+  initYear: number;
+  @Field()
+  finalYear: number;
   @Field()
   state: string;
-  @Field(() => [EditDictionaryObjectType])
-  dictionaries: [EditDictionaryObjectType];
+  @Field(() => [DictionaryToEditType], { nullable: true })
+  dictionaries: [DictionaryToEditType];
 }
 
 @InputType()
@@ -39,7 +44,9 @@ export class NewfraseograficStudyType {
   @Field()
   name: string;
   @Field()
-  period: string;
+  initYear: number;
+  @Field()
+  finalYear: number;
   @Field({ nullable: true })
   state: string;
   @Field(() => [NewDictionaryType], { nullable: true })
@@ -47,15 +54,17 @@ export class NewfraseograficStudyType {
 }
 
 @InputType()
-export class EditfraseograficStudyType {
+export class EditedfraseograficStudyType {
   @Field(() => ID)
   id?: string;
   @Field()
   name: string;
   @Field()
-  period: string;
+  initYear: number;
+  @Field()
+  finalYear: number;
   @Field({ nullable: true })
   state: string;
-  @Field(() => [EditDictionaryInputType], { nullable: true })
-  dictionaries: EditDictionaryInputType[];
+  @Field(() => [EditedDictionaryType], { nullable: true })
+  dictionaries: EditedDictionaryType[];
 }

@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Ubication } from './model/ubication.modelinterface';
@@ -11,41 +11,31 @@ export class UbicationService {
     private UbicationModel: Model<Ubication>,
   ) {}
 
-  async findAll() {
-    const allUbications = await this.UbicationModel.find()
-      .populate({ path: 'clasifications', model: 'Clasification' })
-      .exec();
-    console.log('allubication', allUbications);
-    return allUbications;
+  findAll() {
+    return this.UbicationModel.find()
+      .exec()
+      .then(allUbications => {
+        return allUbications;
+      })
+      .catch(e => {
+        Logger.verbose(e);
+        return e;
+      });
   }
 
-  async findByID(ubicationID: string) {
-    return await this.UbicationModel.findById(ubicationID).exec();
-  }
-
-  async findAllLemmaClasifications() {
-    const Ubication = await this.UbicationModel.findOne({ ubication: 'Lema' })
-      .populate({ path: 'clasifications', model: 'Clasification' })
-      .exec();
-    console.log('findAllLemmaClasifications', Ubication);
-    return Ubication.clasifications;
-  }
-
-  async findAllSublemmaClasifications() {
-    const Ubication = await this.UbicationModel.findOne({
-      ubication: 'Sublema',
-    })
-      .populate({ path: 'clasifications', model: 'Clasification' })
-      .exec();
-    console.log('findAllSublemmaClasifications', Ubication);
-    return Ubication.clasifications;
+  findByID(ubicationID: string) {
+    return this.UbicationModel.findById(ubicationID)
+      .exec()
+      .then(u => u);
   }
 
   createUbication(newUbication: NewUbicationtype) {
-    const u = new this.UbicationModel(newUbication);
-    u.save();
-    return u
-      .populate({ path: 'clasifications', model: 'Clasification' })
-      .execPopulate();
+    return new this.UbicationModel(newUbication)
+      .save()
+      .then(nu => nu)
+      .catch(e => {
+        Logger.verbose(e);
+        return e;
+      });
   }
 }
