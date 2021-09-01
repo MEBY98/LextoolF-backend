@@ -1,4 +1,6 @@
-import { Injectable, OnModuleInit } from '@nestjs/common';
+import { Injectable, OnModuleInit, Logger } from '@nestjs/common';
+import exceljs from 'exceljs';
+import path from 'path';
 import { Client } from 'minio';
 import {
   MINIO_ENDPOINT,
@@ -22,8 +24,12 @@ export class MinioService implements OnModuleInit {
 
   async getFile(name: string) {
     const img = await this.client.getObject('docs', name);
-    console.log('img:', img);
     return img;
+  }
+
+  async getExcel(name: string) {
+    const excel = await this.client.getObject('excels', name);
+    return excel;
   }
 
   async uploadFile(name: string, data: Buffer, size: number) {
@@ -31,8 +37,26 @@ export class MinioService implements OnModuleInit {
     return obj;
   }
 
+  async uploadExcel(name: string, data: Buffer, size: number) {
+    const obj = await this.client.putObject('excels', name, data, size);
+
+    //Reading Excel
+    const workBook = await new exceljs.Workbook().xlsx.load(data);
+    console.log('workbook:', workBook);
+
+    //Worksheets
+    // const workSheets = workBook.worksheets;
+    // workSheets.forEach(ws => {
+
+    // });
+
+    return obj;
+  }
+
   async onModuleInit() {
     const docs = await this.client.bucketExists('docs');
+    const excels = await this.client.bucketExists('excels');
     if (!docs) await this.client.makeBucket('docs', 'sgd');
+    if (!excels) await this.client.makeBucket('excels', 'sgd');
   }
 }

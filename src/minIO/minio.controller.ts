@@ -37,4 +37,19 @@ export class MinioController {
     // const extension = file.originalname.substring(lastDot + 1);
     return this.service.uploadFile(name, file.buffer, file.size);
   }
+
+  @Post('/excel/:name')
+  @UseInterceptors(FileInterceptor('file'))
+  async uploadExcel(
+    @Param('name') name: string,
+    @Body() body,
+    @UploadedFile() file: Express.Multer.File,
+  ) {
+    console.log('name', name);
+    console.log('file', file);
+    console.log('body', body);
+    // const lastDot = file.originalname.lastIndexOf('.');
+    // const extension = file.originalname.substring(lastDot + 1);
+    return this.service.uploadExcel(name, file.buffer, file.size);
+  }
 }
