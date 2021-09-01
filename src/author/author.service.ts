@@ -46,7 +46,6 @@ export class AuthorService {
         .then(oa => {
           oa.name = editedAuthor.name;
           oa.siglas = editedAuthor.siglas;
-
           return oa
             .save()
             .then(a => {
