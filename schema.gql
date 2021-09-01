@@ -243,6 +243,7 @@ type ObservationType {
 type Query {
   getAllStudies: [FraseograficStudyType!]!
   getStudyByID(studyID: String!): FraseograficStudyToEditType!
+  getDictionariesInfoByID(studyID: String!): [DictionaryInfotype!]!
   getAllDictionaries: [DictionaryType!]!
   getDictionaryByID(dictionaryID: String!): DictionaryType!
   getEntryByID(entryID: String!): EntryToEditType!
@@ -263,7 +264,7 @@ type Query {
 
 type Mutation {
   createStudy(fraseograficStudy: NewfraseograficStudyType!): FraseograficStudyType!
-  deleteStudyByID(studyID: String!): FraseograficStudyType!
+  deleteStudyByID(studyID: String!): Boolean!
   editStudy(newStudy: EditedfraseograficStudyType!): FraseograficStudyType!
   createEntryByDictionaryID(dictionaryID: String!, newEntry: NewEntryType!): EntryType!
   deleteEntryByDictionaryID(dictionaryID: String!, entryID: String!): Boolean!
