@@ -10,4 +10,8 @@ export class DescriptorResolver {
   getAllDescriptors() {
     return this.descriptorService.findAll();
   }
+  @Query(() => DescriptorType)
+  getDescriptorByDescription(@Args('description') description: string) {
+    return this.descriptorService.findByDescription(description);
+  }
 }
