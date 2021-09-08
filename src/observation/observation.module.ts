@@ -13,6 +13,6 @@ import { ObservationResolver } from './observation.resolver';
     DescriptorTypeModule,
   ],
   providers: [ObservationService, ObservationResolver],
-  exports: [ObservationService, ObservationResolver, DescriptorTypeModule],
+  exports: [ObservationService, ObservationResolver],
 })
 export class ObservationModule {}

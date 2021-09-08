@@ -29,7 +29,7 @@ export class DescriptorTypeResolver {
       newDescriptorType,
     );
   }
-  @Mutation(() => DescriptorTypeType)
+  @Mutation(() => DescriptorType)
   createDescriptorByDescriptorType(
     @Args('descriptorTypeID') descriptorTypeID: string,
     @Args('descriptor') descriptor: NewDescriptorType,

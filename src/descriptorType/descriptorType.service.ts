@@ -36,7 +36,15 @@ export class DescriptorTypeService {
     })
       .populate({ path: 'descriptors', model: 'Descriptor' })
       .exec()
-      .then(allDescriptors => {
+      .then(async allDescriptors => {
+        const noApplyDescriptor = await this.DescriptorService.findByDescription(
+          '<No aplica>',
+        );
+        allDescriptors.forEach(dt => {
+          if (dt.inputType !== 'text') {
+            dt.descriptors.push(noApplyDescriptor);
+          }
+        });
         return allDescriptors;
       })
       .catch(e => {
@@ -102,8 +110,7 @@ export class DescriptorTypeService {
         } else {
           const nd = this.DescriptorService.createDescriptor(descriptor);
           dt.descriptors.push(nd.id);
-          return dt
-            .save()
+          dt.save()
             .then(editeddt => {
               return editeddt
                 .populate({
@@ -116,6 +123,7 @@ export class DescriptorTypeService {
               Logger.verbose(e);
               return e;
             });
+          return nd;
         }
       })
       .catch(e => {
