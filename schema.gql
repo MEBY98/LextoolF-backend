@@ -248,9 +248,9 @@ type Query {
   getDictionaryByID(dictionaryID: String!): DictionaryType!
   getEntryByID(entryID: String!): EntryToEditType!
   getEntryUbicationsByID(entryID: String!): [String!]!
-  getAllUbications: [Ubicationtype!]!
   getAllElements: [ElementType!]!
   getUbicationByElementID(elementID: String!): Ubicationtype!
+  getAllUbications: [Ubicationtype!]!
   getAllClasifications: [Clasificationtype!]!
   getAllAuthors: [Authortype!]!
   getAuthorById(id: String!): AuthorToEditType!
@@ -259,6 +259,7 @@ type Query {
   getAllDescriptorsTypes: [DescriptorTypeType!]!
   getDescriptorsTypesByTab(tab: String!): [DescriptorTypeType!]!
   getAllDescriptors: [DescriptorType!]!
+  getDescriptorByDescription(description: String!): DescriptorType!
   getObservationsByTab(tab: String!): [ObservationType!]!
 }
 
@@ -269,15 +270,15 @@ type Mutation {
   createEntryByDictionaryID(dictionaryID: String!, newEntry: NewEntryType!): EntryType!
   deleteEntryByDictionaryID(dictionaryID: String!, entryID: String!): Boolean!
   editEntry(entry: EditedEntryType!): EntryType!
-  createUbication(newUbication: NewUbicationtype!): Ubicationtype!
   createElement(newElement: NewElementType!): ElementType!
+  createUbication(newUbication: NewUbicationtype!): Ubicationtype!
   createClasification(newClasification: NewClasificationtype!): Clasificationtype!
   createAuthor(newAuthor: NewAuthortype!): Authortype!
   editAuthor(editedAuthor: EditedAuthorType!): Authortype!
   createDictionaryInfo(newDictionaryInfo: NewDictionaryInfotype!): DictionaryInfotype!
   editDictionaryInfo(editedDictionaryInfo: EditedDictionaryInfotype!): DictionaryInfotype!
   createDescriptorType(newDescriptorType: NewDescriptorTypeType!): DescriptorTypeType!
-  createDescriptorByDescriptorType(descriptor: NewDescriptorType!, descriptorTypeID: String!): DescriptorTypeType!
+  createDescriptorByDescriptorType(descriptor: NewDescriptorType!, descriptorTypeID: String!): DescriptorType!
   createObservation(newObservationType: NewObservationType!): ObservationType!
 }
 
