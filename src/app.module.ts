@@ -4,7 +4,6 @@ import { FraseograficStudyModule } from './fraseograficStudy/fraseograficStudy.m
 import { MongooseModule } from '@nestjs/mongoose';
 import { MONGO_OPTIONS, MONGO_URL } from '../configuration/mongo.config';
 import { MinioModule } from './minIO/minio.module';
-import { ClasificationModule } from './clasification/clasification.module';
 import { DescriptorTypeModule } from './descriptorType/descriptorType.module';
 import { ObservationModule } from './observation/observation.module';
 

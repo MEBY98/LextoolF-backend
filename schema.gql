@@ -234,7 +234,7 @@ type DescriptorTypeType {
 }
 
 type ObservationType {
-  id: ID!
+  id: ID
   name: String!
   tab: String!
   descriptorsTypes: [DescriptorTypeType!]!
@@ -256,10 +256,10 @@ type Query {
   getAuthorById(id: String!): AuthorToEditType!
   getAllDictionaryInfo: [DictionaryInfotype!]!
   getDictionaryInfoById(id: String!): DictionaryInfotype!
-  getAllDescriptorsTypes: [DescriptorTypeType!]!
-  getDescriptorsTypesByTab(tab: String!): [DescriptorTypeType!]!
   getAllDescriptors: [DescriptorType!]!
   getDescriptorByDescription(description: String!): DescriptorType!
+  getAllDescriptorsTypes: [DescriptorTypeType!]!
+  getDescriptorsTypesByTab(tab: String!): [DescriptorTypeType!]!
   getObservationsByTab(tab: String!): [ObservationType!]!
 }
 
