@@ -131,4 +131,28 @@ export class DescriptorTypeService {
         return e;
       });
   }
+  deleteDescriptorByDescriptorType(
+    descriptorTypeID: string,
+    descriptorID: string,
+  ) {
+    return this.DescriptorTypeModel.findById(descriptorTypeID)
+      .exec()
+      .then(dt => {
+        dt.descriptors = dt.descriptors.filter(d => d !== descriptorID);
+        this.DescriptorService.deleteDescriptor(descriptorID);
+        return dt
+          .save()
+          .then(dtsaved => {
+            return dtsaved
+              .populate({
+                path: 'descriptors',
+                model: 'Descriptor',
+              })
+              .execPopulate()
+              .then(dtsavedpopulated => dtsavedpopulated);
+          })
+          .catch(e => e);
+      })
+      .catch(e => e);
+  }
 }

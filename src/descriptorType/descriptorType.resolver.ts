@@ -39,4 +39,14 @@ export class DescriptorTypeResolver {
       descriptor,
     );
   }
+  @Mutation(() => DescriptorTypeType)
+  deleteDescriptorByDescriptorType(
+    @Args('descriptorTypeID') descriptorTypeID: string,
+    @Args('descriptorID') descriptorID: string,
+  ) {
+    return this.DescriptorTypeService.deleteDescriptorByDescriptorType(
+      descriptorTypeID,
+      descriptorID,
+    );
+  }
 }
