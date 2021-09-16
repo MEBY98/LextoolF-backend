@@ -277,8 +277,10 @@ type Mutation {
   editAuthor(editedAuthor: EditedAuthorType!): Authortype!
   createDictionaryInfo(newDictionaryInfo: NewDictionaryInfotype!): DictionaryInfotype!
   editDictionaryInfo(editedDictionaryInfo: EditedDictionaryInfotype!): DictionaryInfotype!
+  editDescriptor(editedDescriptor: DescriptorInputType!): DescriptorType!
   createDescriptorType(newDescriptorType: NewDescriptorTypeType!): DescriptorTypeType!
   createDescriptorByDescriptorType(descriptor: NewDescriptorType!, descriptorTypeID: String!): DescriptorType!
+  deleteDescriptorByDescriptorType(descriptorID: String!, descriptorTypeID: String!): DescriptorTypeType!
   createObservation(newObservationType: NewObservationType!): ObservationType!
 }
 
@@ -478,6 +480,11 @@ input EditedDictionaryInfotype {
   author: [String!]!
   annoOfPublication: Float!
   reference: String!
+}
+
+input DescriptorInputType {
+  id: ID
+  description: String
 }
 
 input NewDescriptorTypeType {
