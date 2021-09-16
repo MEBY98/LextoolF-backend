@@ -78,7 +78,43 @@ export class MinioService implements OnModuleInit {
     //Worksheets
     const workSheets = workBook.worksheets;
     workSheets.forEach(ws => {
+      let actualImg: {
+        type: 'image';
+        imageId: string;
+        range: exceljs.ImageRange;
+      } = undefined;
+      let beforeImg: {
+        type: 'image';
+        imageId: string;
+        range: exceljs.ImageRange;
+      } = undefined;
       ws.getImages().forEach(img => {
+        actualImg = img;
+        if (actualImg && beforeImg) {
+          const actualImgInitRow = actualImg.range.tl.nativeRow;
+          const beforeImgFinalRow = beforeImg.range.br.nativeRow;
+          if (actualImgInitRow <= beforeImgFinalRow) {
+            errors.push(
+              new ExcelError(
+                'Imagen',
+                ws.name,
+                actualImgInitRow + 1,
+                'Imagen mal colocada',
+              ),
+            );
+          }
+          if (actualImgInitRow - beforeImgFinalRow > 1) {
+            errors.push(
+              new ExcelError(
+                'Imagen',
+                ws.name,
+                actualImgInitRow,
+                'Fila sin imagen',
+              ),
+            );
+          }
+        }
+        beforeImg = actualImg;
         const letter: string = ws.name;
         const initRow: number = img.range.tl.nativeRow;
         const finalRow: number = img.range.br.nativeRow;

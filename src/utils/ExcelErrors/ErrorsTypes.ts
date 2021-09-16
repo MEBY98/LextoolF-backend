@@ -1,4 +1,8 @@
-type ErrorType = 'Celda vacía' | 'Valor no válido';
+type ErrorType =
+  | 'Celda vacía'
+  | 'Valor no válido'
+  | 'Imagen mal colocada'
+  | 'Fila sin imagen';
 export class ExcelError {
   element: string;
   sheet: string;
