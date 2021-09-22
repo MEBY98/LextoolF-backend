@@ -21,10 +21,39 @@ export class DescriptorService {
         return e;
       });
   }
-
+  findByDescription(description: string) {
+    return this.DescriptorModel.findOne({ description: description })
+      .exec()
+      .then(d => d)
+      .catch(e => {
+        Logger.verbose(e);
+        return e;
+      });
+  }
   createDescriptor(NewDescriptor: NewDescriptorType) {
     const result = new this.DescriptorModel(NewDescriptor);
     result.save();
     return result;
+  }
+  editDescriptor(editedDescriptor: DescriptorType) {
+    return this.DescriptorModel.findById(editedDescriptor.id)
+      .exec()
+      .then(d => {
+        d.description = editedDescriptor.description;
+        return d
+          .save()
+          .then(savedD => savedD)
+          .catch(e => e);
+      })
+      .catch(e => e);
+  }
+  deleteDescriptor(id: string) {
+    return this.DescriptorModel.findByIdAndDelete(id)
+      .exec()
+      .then(deleted => (deleted ? true : false))
+      .catch(e => {
+        Logger.verbose(e);
+        return e;
+      });
   }
 }

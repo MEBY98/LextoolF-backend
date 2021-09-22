@@ -17,12 +17,15 @@
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
-    "test:e2e": "jest --config ./test/jest-e2e.json"
+    "test:e2e": "jest --config ./test/jest-e2e.json",
+    "migrate:create": "migrate create --template-file ./src/utils/Migrations/template.ts --migrations-dir=\"./migrations\" --compiler=\"ts:./src/utils/Migrations/ts-compiler.js\"",
+    "migrate:up": "migrate --migrations-dir=\"./migrations\" --compiler=\"ts:./src/utils/Migrations/ts-compiler.js\" up",
+    "migrate:down": "migrate --migrations-dir=\"./migrations\" --compiler=\"ts:./src/utils/Migrations/ts-compiler.js\" down"
   },
   "dependencies": {
     "@nestjs-modules/mailer": "^1.5.1",
     "@nestjs/common": "^7.4.4",
-    "@nestjs/config": "^1.0.0",
+    "@nestjs/config": "^1.0.1",
     "@nestjs/core": "^7.4.4",
     "@nestjs/graphql": "^7.6.0",
     "@nestjs/jwt": "^7.1.0",
@@ -52,6 +55,7 @@
     "jwks-rsa": "^1.8.1",
     "jwt-decode": "^2.2.0",
     "keypair": "^1.0.1",
+    "migrate": "^1.7.0",
     "minio": "^7.0.18",
     "mongoose": "^5.9.27",
     "multer": "^1.4.2",

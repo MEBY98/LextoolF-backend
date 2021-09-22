@@ -9,6 +9,13 @@ export class DescriptorType {
 }
 
 @InputType()
+export class DescriptorInputType {
+  @Field(() => ID, { nullable: true })
+  readonly id?: string;
+  @Field({ nullable: true })
+  readonly description: string;
+}
+@InputType()
 export class NewDescriptorType {
   @Field()
   readonly description: string;

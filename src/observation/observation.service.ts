@@ -4,6 +4,8 @@ import { Model } from 'mongoose';
 import { Observation } from './model/observation.modelinterface';
 import { NewObservationType } from './type/observation.types.dto';
 import { DescriptorTypeService } from 'src/descriptorType/descriptorType.service';
+import { DescriptorService } from 'src/descriptor/descriptor.service';
+import { DescriptorTypeType } from 'src/descriptorType/type/descriptorType.types.dto';
 
 @Injectable()
 export class ObservationService {
@@ -11,6 +13,7 @@ export class ObservationService {
     @InjectModel('Observation')
     private ObservationModel: Model<Observation>,
     private readonly DescriptorTypeService: DescriptorTypeService,
+    private readonly DescriptorService: DescriptorService,
   ) {}
 
   async findByTab(tab: string) {
@@ -23,7 +26,21 @@ export class ObservationService {
         populate: { path: 'descriptors', model: 'Descriptor' },
       })
       .exec()
-      .then(observations => {
+      .then(async observations => {
+        const noApplyDescriptor = await this.DescriptorService.findByDescription(
+          '<No aplica>',
+        );
+        const noDescribeDescriptor = await this.DescriptorService.findByDescription(
+          '<No descrito>',
+        );
+        observations.forEach(o => {
+          o.descriptorsTypes.forEach(dt => {
+            if ((dt as any).inputType !== 'text') {
+              (dt as any).descriptors.push(noApplyDescriptor);
+              (dt as any).descriptors.push(noDescribeDescriptor);
+            }
+          });
+        });
         return observations;
       })
       .catch(e => {

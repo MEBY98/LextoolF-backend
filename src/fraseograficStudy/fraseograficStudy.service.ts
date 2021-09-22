@@ -7,6 +7,8 @@ import {
   EditedfraseograficStudyType,
 } from './type/fraseograficStudy.types';
 import { DictionaryService } from 'src/dictionary/dictionary.service';
+import { DictionaryInfo } from 'src/dictionaryInfo/model/dictionaryInfo.modelinterface';
+import { DictionaryType } from 'src/dictionary/type/dictionary.types';
 
 @Injectable()
 export class FraseograficStudyService {
@@ -185,6 +187,35 @@ export class FraseograficStudyService {
             Logger.verbose(e);
             return e;
           });
+      })
+      .catch(e => {
+        Logger.verbose(e);
+        return e;
+      });
+  }
+
+  async dictionariesInfoByStuydID(studyID: string) {
+    return this.fraseograficStudyModel
+      .findById(studyID)
+      .populate({
+        path: 'dictionaries',
+        model: 'Dictionary',
+        populate: {
+          path: 'dictionaryInfo',
+          model: 'DictionaryInfo',
+          populate: {
+            path: 'author',
+            model: 'Author',
+          },
+        },
+      })
+      .exec()
+      .then(s => {
+        const result = [];
+        s.dictionaries.forEach(d => {
+          result.push((d as any).dictionaryInfo);
+        });
+        return result;
       })
       .catch(e => {
         Logger.verbose(e);

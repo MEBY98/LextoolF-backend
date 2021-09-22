@@ -13,6 +13,6 @@ import { DescriptorModule } from 'src/descriptor/descriptor.module';
     DescriptorModule,
   ],
   providers: [DescriptorTypeService, DescriptorTypeResolver],
-  exports: [DescriptorTypeService, DescriptorTypeResolver],
+  exports: [DescriptorTypeService, DescriptorTypeResolver, DescriptorModule],
 })
 export class DescriptorTypeModule {}

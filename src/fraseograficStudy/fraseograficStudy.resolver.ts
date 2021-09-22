@@ -6,6 +6,7 @@ import {
   EditedfraseograficStudyType,
   FraseograficStudyToEditType,
 } from './type/fraseograficStudy.types';
+import { DictionaryInfotype } from 'src/dictionaryInfo/type/dictionaryInfo.type';
 // import {
 //   NewDictionaryType,
 //   DictionaryType,
@@ -28,6 +29,11 @@ export class FraseograficStudyResolver {
     return this.fraseograficStudyService.findByID(studyID);
   }
 
+  @Query(() => [DictionaryInfotype])
+  async getDictionariesInfoByID(@Args('studyID') studyID: string) {
+    return this.fraseograficStudyService.dictionariesInfoByStuydID(studyID);
+  }
+
   @Mutation(() => FraseograficStudyType)
   async createStudy(
     @Args('fraseograficStudy') fraseograficStudy: NewfraseograficStudyType,
@@ -35,7 +41,7 @@ export class FraseograficStudyResolver {
     return this.fraseograficStudyService.createStudy(fraseograficStudy);
   }
 
-  @Mutation(() => FraseograficStudyType)
+  @Mutation(() => Boolean)
   async deleteStudyByID(@Args('studyID') studyID: string) {
     console.log(studyID);
     return this.fraseograficStudyService.deleteStudy(studyID);

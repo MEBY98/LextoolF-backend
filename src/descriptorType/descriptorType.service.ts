@@ -36,7 +36,19 @@ export class DescriptorTypeService {
     })
       .populate({ path: 'descriptors', model: 'Descriptor' })
       .exec()
-      .then(allDescriptors => {
+      .then(async allDescriptors => {
+        const noApplyDescriptor = await this.DescriptorService.findByDescription(
+          '<No aplica>',
+        );
+        const noDescribeDescriptor = await this.DescriptorService.findByDescription(
+          '<No descrito>',
+        );
+        allDescriptors.forEach(dt => {
+          if (dt.inputType !== 'text') {
+            dt.descriptors.push(noApplyDescriptor);
+            dt.descriptors.push(noDescribeDescriptor);
+          }
+        });
         return allDescriptors;
       })
       .catch(e => {
@@ -102,8 +114,7 @@ export class DescriptorTypeService {
         } else {
           const nd = this.DescriptorService.createDescriptor(descriptor);
           dt.descriptors.push(nd.id);
-          return dt
-            .save()
+          dt.save()
             .then(editeddt => {
               return editeddt
                 .populate({
@@ -116,11 +127,36 @@ export class DescriptorTypeService {
               Logger.verbose(e);
               return e;
             });
+          return nd;
         }
       })
       .catch(e => {
         Logger.verbose(e);
         return e;
       });
+  }
+  deleteDescriptorByDescriptorType(
+    descriptorTypeID: string,
+    descriptorID: string,
+  ) {
+    return this.DescriptorTypeModel.findById(descriptorTypeID)
+      .exec()
+      .then(dt => {
+        dt.descriptors = dt.descriptors.filter(d => d !== descriptorID);
+        this.DescriptorService.deleteDescriptor(descriptorID);
+        return dt
+          .save()
+          .then(dtsaved => {
+            return dtsaved
+              .populate({
+                path: 'descriptors',
+                model: 'Descriptor',
+              })
+              .execPopulate()
+              .then(dtsavedpopulated => dtsavedpopulated);
+          })
+          .catch(e => e);
+      })
+      .catch(e => e);
   }
 }

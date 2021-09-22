@@ -1,5 +1,5 @@
 import mongoose from 'mongoose';
-import { UbicationModule } from 'src/ubication/ubication.module';
+import { toObjectId, toObjectIds } from '../../utils/utils';
 
 export const ElementSchema = new mongoose.Schema({
   element: {
@@ -186,3 +186,58 @@ export const ElementSchema = new mongoose.Schema({
     },
   },
 });
+
+// ElementSchema.pre<any>('save', function(next) {
+//   this.generalDescription.conceptualDomain = toObjectId(
+//     this.generalDescription.conceptualDomain,
+//   );
+//   this.generalDescription.tipo = toObjectId(this.generalDescription.tipo);
+//   this.generalDescription.structure = toObjectId(
+//     this.generalDescription.structure,
+//   );
+
+//   this.orderLemma.order = toObjectIds(this.orderLemma.order);
+//   this.orderLemma.criteriaOfLematization = toObjectIds(
+//     this.orderLemma.criteriaOfLematization,
+//   );
+//   this.orderLemma.formalStructure = toObjectIds(
+//     this.orderLemma.formalStructure,
+//   );
+//   this.orderLemma.ubicationOfContorno = toObjectId(
+//     this.orderLemma.ubicationOfContorno,
+//   );
+//   this.orderLemma.typeOfVariant = toObjectIds(this.orderLemma.typeOfVariant);
+//   this.orderLemma.formatOfVariant = toObjectIds(
+//     this.orderLemma.formatOfVariant,
+//   );
+//   this.orderLemma.tipographyOfVariant = toObjectIds(
+//     this.orderLemma.tipographyOfVariant,
+//   );
+
+//   for (let UIindex = 0; UIindex < this.useInformation.length; UIindex++) {
+//     const UI = this.useInformation[UIindex];
+//     UI.position = toObjectId(UI.position);
+//     UI.format = toObjectId(UI.format);
+//     UI.tipography = toObjectId(UI.tipography);
+//   }
+
+//   for (let CDindex = 0; CDindex < this.contornoDefinition.length; CDindex++) {
+//     const CD = this.contornoDefinition[CDindex];
+//     CD.typeOfDefinition = toObjectId(CD.typeOfDefinition);
+//     CD.argumentalSchema = toObjectId(CD.argumentalSchema);
+//     CD.relationship = toObjectIds(CD.relationship);
+//     CD.typeOfContorno = toObjectIds(CD.typeOfContorno);
+//     CD.positionOfContorno = toObjectIds(CD.positionOfContorno);
+//     CD.formatOfContorno = toObjectIds(CD.formatOfContorno);
+//   }
+
+//   this.example.formatOfExample = toObjectIds(this.example.formatOfExample);
+//   this.example.functionOfExample = toObjectIds(this.example.functionOfExample);
+//   this.example.typeOfExample = toObjectId(this.example.typeOfExample);
+
+//   this.typeOfRelationship = toObjectId(this.typeOfRelationship);
+//   this.formOfPresentation = toObjectIds(this.formOfPresentation);
+//   this.position = toObjectIds(this.position);
+
+//   next();
+// });

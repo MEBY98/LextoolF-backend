@@ -29,7 +29,7 @@ export class DescriptorTypeResolver {
       newDescriptorType,
     );
   }
-  @Mutation(() => DescriptorTypeType)
+  @Mutation(() => DescriptorType)
   createDescriptorByDescriptorType(
     @Args('descriptorTypeID') descriptorTypeID: string,
     @Args('descriptor') descriptor: NewDescriptorType,
@@ -37,6 +37,16 @@ export class DescriptorTypeResolver {
     return this.DescriptorTypeService.createDescriptorByDescriptorType(
       descriptorTypeID,
       descriptor,
+    );
+  }
+  @Mutation(() => DescriptorTypeType)
+  deleteDescriptorByDescriptorType(
+    @Args('descriptorTypeID') descriptorTypeID: string,
+    @Args('descriptorID') descriptorID: string,
+  ) {
+    return this.DescriptorTypeService.deleteDescriptorByDescriptorType(
+      descriptorTypeID,
+      descriptorID,
     );
   }
 }

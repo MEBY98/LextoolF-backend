@@ -30,7 +30,7 @@ export class DictionaryResolver {
     );
   }
 
-  @Mutation(returns => Boolean)
+  @Mutation(() => Boolean)
   async deleteEntryByDictionaryID(
     @Args('entryID') entryID: string,
     @Args('dictionaryID') dictionaryID: string,
