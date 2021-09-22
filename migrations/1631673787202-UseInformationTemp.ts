@@ -42,3 +42,7 @@ export const up = async () => {
   UseInformationTemp.descriptorsTypes = descriptorsTypesIDs;
   await insertDocument('observations', UseInformationTemp);
 };
+
+export const down = async () => {
+  console.log('Down migration UseInformationTemp');
+};

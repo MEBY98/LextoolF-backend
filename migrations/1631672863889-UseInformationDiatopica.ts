@@ -58,3 +58,7 @@ export const up = async () => {
   UseInformationDiatopica.descriptorsTypes = descriptorsTypesIDs;
   await insertDocument('observations', UseInformationDiatopica);
 };
+
+export const down = async () => {
+  console.log('Down migration UseInformationDiatopica');
+};

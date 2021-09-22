@@ -58,3 +58,7 @@ export const up = async () => {
   UseInformationDiafasica.descriptorsTypes = descriptorsTypesIDs;
   await insertDocument('observations', UseInformationDiafasica);
 };
+
+export const down = async () => {
+  console.log('Down migration UseInformationDiafasica');
+};

@@ -42,3 +42,7 @@ export const up = async () => {
   UseInformationGramatical.descriptorsTypes = descriptorsTypesIDs;
   await insertDocument('observations', UseInformationGramatical);
 };
+
+export const down = async () => {
+  console.log('Down migration UseInformationGramatical');
+};

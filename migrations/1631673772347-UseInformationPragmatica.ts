@@ -42,3 +42,7 @@ export const up = async () => {
   UseInformationPrag.descriptorsTypes = descriptorsTypesIDs;
   await insertDocument('observations', UseInformationPrag);
 };
+
+export const down = async () => {
+  console.log('Down migration UseInformationPragmatica');
+};

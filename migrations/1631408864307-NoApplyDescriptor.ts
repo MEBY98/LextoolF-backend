@@ -1,15 +1,10 @@
-import {
-  insertDocument,
-  getCollection,
-} from '../src/utils/Migrations/mongoDbUtils';
+import { insertDocument } from '../src/utils/Migrations/mongoDbUtils';
 
 export const up = async () => {
   await insertDocument('descriptors', { description: '<No aplica>' });
+  await insertDocument('descriptors', { description: '<No descrito>' });
 };
 
 export const down = async () => {
-  await (await getCollection('descriptors')).deleteOne({
-    description: '<No aplica>',
-  });
   console.log('Down migration NoApplyDescriptor');
 };

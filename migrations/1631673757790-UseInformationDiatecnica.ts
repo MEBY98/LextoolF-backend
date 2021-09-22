@@ -42,3 +42,7 @@ export const up = async () => {
   UseInformationDiatecnica.descriptorsTypes = descriptorsTypesIDs;
   await insertDocument('observations', UseInformationDiatecnica);
 };
+
+export const down = async () => {
+  console.log('Down migration UseInformationDiatecnica');
+};
