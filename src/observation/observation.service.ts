@@ -30,10 +30,14 @@ export class ObservationService {
         const noApplyDescriptor = await this.DescriptorService.findByDescription(
           '<No aplica>',
         );
+        const noDescribeDescriptor = await this.DescriptorService.findByDescription(
+          '<No descrito>',
+        );
         observations.forEach(o => {
           o.descriptorsTypes.forEach(dt => {
             if ((dt as any).inputType !== 'text') {
               (dt as any).descriptors.push(noApplyDescriptor);
+              (dt as any).descriptors.push(noDescribeDescriptor);
             }
           });
         });

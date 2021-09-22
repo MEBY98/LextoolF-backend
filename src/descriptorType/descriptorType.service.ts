@@ -40,9 +40,13 @@ export class DescriptorTypeService {
         const noApplyDescriptor = await this.DescriptorService.findByDescription(
           '<No aplica>',
         );
+        const noDescribeDescriptor = await this.DescriptorService.findByDescription(
+          '<No descrito>',
+        );
         allDescriptors.forEach(dt => {
           if (dt.inputType !== 'text') {
             dt.descriptors.push(noApplyDescriptor);
+            dt.descriptors.push(noDescribeDescriptor);
           }
         });
         return allDescriptors;
