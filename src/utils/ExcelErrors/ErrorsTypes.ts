@@ -2,7 +2,9 @@ type ErrorType =
   | 'Celda vacía'
   | 'Valor no válido'
   | 'Imagen mal colocada'
-  | 'Fila sin imagen';
+  | 'Fila sin imagen'
+  | 'Elemento existente';
+
 export class ExcelError {
   element: string;
   sheet: string;

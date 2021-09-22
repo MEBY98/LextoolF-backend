@@ -16,21 +16,24 @@ import { ExcelError } from 'src/utils/ExcelErrors/ErrorsTypes';
 import { validateExcelValue } from 'src/utils/ExcelErrors/ValidateValue';
 import { NewEntryType, EntryType } from 'src/entry/type/entry.type';
 import { NewElementType } from 'src/element/type/element.type';
+import { ConfigService } from '@nestjs/config';
 @Injectable()
 export class MinioService implements OnModuleInit {
   private client: Client;
+
   constructor(
+    private readonly configService: ConfigService,
     private readonly DictionaryService: DictionaryService,
     private readonly DescriptorService: DescriptorService,
     private readonly UbicationService: UbicationService,
     private readonly ClasificationService: ClasificationService,
   ) {
     this.client = new Client({
-      endPoint: MINIO_ENDPOINT,
+      endPoint: configService.get<string>('MINIO_ENDPOINT'),
       port: 9000,
       useSSL: false,
-      accessKey: MINIO_ACCESS_KEY,
-      secretKey: MINIO_SECRET_KEY,
+      accessKey: configService.get<string>('MINIO_ACCESS_KEY'),
+      secretKey: configService.get<string>('MINIO_SECRET_KEY'),
     });
   }
 
@@ -54,9 +57,9 @@ export class MinioService implements OnModuleInit {
     const errors: ExcelError[] = [];
     const entries: NewEntryType[] = [];
 
-    //NoApplyDescriptor
-    const NoApplyDescriptor = await this.DescriptorService.findByDescription(
-      '<No aplica>',
+    //NoDescribeDescriptor
+    const NoDescribeDescriptor = await this.DescriptorService.findByDescription(
+      '<No descrito>',
     );
 
     //MapUbications
@@ -71,6 +74,29 @@ export class MinioService implements OnModuleInit {
     (clasifications as Array<Clasification>).forEach(u => {
       MapClasifications.set(u.clasification, u.id);
     });
+
+    //LemmasOfDictionary
+    const Lemmas = await this.DictionaryService.findByID(dictionaryID).then(
+      d => {
+        const lemmaList: string[] = [];
+        for (let entryIndex = 0; entryIndex < d.entries.length; entryIndex++) {
+          const entry = d.entries[entryIndex];
+          let isLemma = false;
+          for (
+            let elementIndex = 0;
+            elementIndex < entry.elements.length && !isLemma;
+            elementIndex++
+          ) {
+            const element = entry.elements[elementIndex];
+            if (element.clasification.clasification === 'Lema') {
+              isLemma = true;
+            }
+            lemmaList.push(element.element);
+          }
+        }
+        return lemmaList;
+      },
+    );
 
     //Reading Excel
     const workBook = await new exceljs.Workbook().xlsx.load(data);
@@ -144,7 +170,23 @@ export class MinioService implements OnModuleInit {
           if (cellValueU instanceof ExcelError) {
             errors.push(cellValueU);
           } else {
-            ubication = MapUbications.get(cellValueU);
+            if (cellValueU === 'Lema') {
+              if (!Lemmas.includes(element)) {
+                ubication = MapUbications.get(cellValueU);
+                console.log('ubication', ubication);
+              } else {
+                errors.push(
+                  new ExcelError(
+                    'Elemento',
+                    letter,
+                    index + 1,
+                    'Elemento existente',
+                  ),
+                );
+              }
+            } else {
+              ubication = MapUbications.get(cellValueU);
+            }
           }
           //Clasification
           let clasification = '';
@@ -165,15 +207,15 @@ export class MinioService implements OnModuleInit {
             ubication,
             clasification,
             generalDescription: {
-              conceptualDomain: NoApplyDescriptor.id,
-              structure: NoApplyDescriptor.id,
-              tipo: NoApplyDescriptor.id,
+              conceptualDomain: NoDescribeDescriptor.id,
+              structure: NoDescribeDescriptor.id,
+              tipo: NoDescribeDescriptor.id,
             },
             contornoDefinition: [
               {
                 definition: '',
-                typeOfDefinition: NoApplyDescriptor.id,
-                argumentalSchema: NoApplyDescriptor.id,
+                typeOfDefinition: NoDescribeDescriptor.id,
+                argumentalSchema: NoDescribeDescriptor.id,
                 relationship: [],
                 contorno: '',
                 typeOfContorno: [],
@@ -194,76 +236,77 @@ export class MinioService implements OnModuleInit {
               order: [],
               tipographyOfVariant: [],
               typeOfVariant: [],
-              ubicationOfContorno: NoApplyDescriptor.id,
+              ubicationOfContorno: NoDescribeDescriptor.id,
             },
             paradigmaticInfo: {
               formOfPresentation: [],
               position: [],
-              typeOfRelationship: NoApplyDescriptor.id,
+              typeOfRelationship: NoDescribeDescriptor.id,
             },
             useInformation: [
               {
                 anotation: '',
-                position: NoApplyDescriptor.id,
-                format: NoApplyDescriptor.id,
-                tipography: NoApplyDescriptor.id,
+                position: NoDescribeDescriptor.id,
+                format: NoDescribeDescriptor.id,
+                tipography: NoDescribeDescriptor.id,
               },
               {
                 anotation: '',
-                position: NoApplyDescriptor.id,
-                format: NoApplyDescriptor.id,
-                tipography: NoApplyDescriptor.id,
+                position: NoDescribeDescriptor.id,
+                format: NoDescribeDescriptor.id,
+                tipography: NoDescribeDescriptor.id,
               },
               {
                 anotation: '',
-                position: NoApplyDescriptor.id,
-                format: NoApplyDescriptor.id,
-                tipography: NoApplyDescriptor.id,
+                position: NoDescribeDescriptor.id,
+                format: NoDescribeDescriptor.id,
+                tipography: NoDescribeDescriptor.id,
               },
               {
                 anotation: '',
-                position: NoApplyDescriptor.id,
-                format: NoApplyDescriptor.id,
-                tipography: NoApplyDescriptor.id,
+                position: NoDescribeDescriptor.id,
+                format: NoDescribeDescriptor.id,
+                tipography: NoDescribeDescriptor.id,
               },
               {
                 anotation: '',
-                position: NoApplyDescriptor.id,
-                format: NoApplyDescriptor.id,
-                tipography: NoApplyDescriptor.id,
+                position: NoDescribeDescriptor.id,
+                format: NoDescribeDescriptor.id,
+                tipography: NoDescribeDescriptor.id,
               },
               {
                 anotation: '',
-                position: NoApplyDescriptor.id,
-                format: NoApplyDescriptor.id,
-                tipography: NoApplyDescriptor.id,
+                position: NoDescribeDescriptor.id,
+                format: NoDescribeDescriptor.id,
+                tipography: NoDescribeDescriptor.id,
               },
               {
                 anotation: '',
-                position: NoApplyDescriptor.id,
-                format: NoApplyDescriptor.id,
-                tipography: NoApplyDescriptor.id,
+                position: NoDescribeDescriptor.id,
+                format: NoDescribeDescriptor.id,
+                tipography: NoDescribeDescriptor.id,
               },
               {
                 anotation: '',
-                position: NoApplyDescriptor.id,
-                format: NoApplyDescriptor.id,
-                tipography: NoApplyDescriptor.id,
+                position: NoDescribeDescriptor.id,
+                format: NoDescribeDescriptor.id,
+                tipography: NoDescribeDescriptor.id,
               },
               {
                 anotation: '',
-                position: NoApplyDescriptor.id,
-                format: NoApplyDescriptor.id,
-                tipography: NoApplyDescriptor.id,
+                position: NoDescribeDescriptor.id,
+                format: NoDescribeDescriptor.id,
+                tipography: NoDescribeDescriptor.id,
               },
               {
                 anotation: '',
-                position: NoApplyDescriptor.id,
-                format: NoApplyDescriptor.id,
-                tipography: NoApplyDescriptor.id,
+                position: NoDescribeDescriptor.id,
+                format: NoDescribeDescriptor.id,
+                tipography: NoDescribeDescriptor.id,
               },
             ],
           });
+          console.log('elementsAfterPush', elements);
         }
 
         const imgFile = workBook.getImage(Number.parseInt(img.imageId));
