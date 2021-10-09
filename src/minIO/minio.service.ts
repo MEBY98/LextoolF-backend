@@ -1,28 +1,48 @@
-import { Injectable, OnModuleInit, Logger } from '@nestjs/common';
+import { Injectable, OnModuleInit } from '@nestjs/common';
 import exceljs from 'exceljs';
+import fs from 'fs';
 import { Client } from 'minio';
-import {
-  MINIO_ENDPOINT,
-  MINIO_ACCESS_KEY,
-  MINIO_SECRET_KEY,
-} from 'configuration/minIO.config';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { DescriptorService } from 'src/descriptor/descriptor.service';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { UbicationService } from 'src/ubication/ubication.service';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { ClasificationService } from 'src/clasification/clasification.service';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { DictionaryService } from 'src/dictionary/dictionary.service';
-import { Ubication } from 'src/ubication/model/ubication.modelinterface';
-import { Clasification } from 'src/clasification/model/clasification.modelinterface';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import { FraseograficStudyService } from 'src/fraseograficStudy/fraseograficStudy.service';
 import { ExcelError } from 'src/utils/ExcelErrors/ErrorsTypes';
 import { validateExcelValue } from 'src/utils/ExcelErrors/ValidateValue';
-import { NewEntryType, EntryType } from 'src/entry/type/entry.type';
+import { NewEntryType } from 'src/entry/type/entry.type';
 import { NewElementType } from 'src/element/type/element.type';
 import { ConfigService } from '@nestjs/config';
+// import { Response } from 'express';
+// import { Descriptor } from 'src/descriptor/model/descriptor.modelinterface';
+import { zipDirectory, createMap } from 'src/utils/utils';
+import { FraseograficStudyFullPopulated } from 'src/fraseograficStudy/dto/fraseograficStudy.dto';
+import {
+  createFolderStructure,
+  writeExcel,
+  deleteTempFolder,
+} from 'src/utils/ExportedStudy/ExportedStudyUtils';
+import {
+  getLemmasOfDictionary,
+  createNewElement,
+} from 'src/utils/UploadExcel/UploadExcelUtils';
+import {
+  ExcelImage,
+  validateImagePosition,
+} from 'src/utils/ExcelErrors/ValidateImagePosition';
+import { validateSheets } from 'src/utils/ExcelErrors/ValidateSheetsLetter';
+import del from 'del';
 @Injectable()
 export class MinioService implements OnModuleInit {
   private client: Client;
 
   constructor(
     private readonly configService: ConfigService,
+    private readonly FraseograficStudyService: FraseograficStudyService,
     private readonly DictionaryService: DictionaryService,
     private readonly DescriptorService: DescriptorService,
     private readonly UbicationService: UbicationService,
@@ -30,7 +50,7 @@ export class MinioService implements OnModuleInit {
   ) {
     this.client = new Client({
       endPoint: configService.get<string>('MINIO_ENDPOINT'),
-      port: 9000,
+      port: parseInt(configService.get<string>('MINIO_PORT')),
       useSSL: false,
       accessKey: configService.get<string>('MINIO_ACCESS_KEY'),
       secretKey: configService.get<string>('MINIO_SECRET_KEY'),
@@ -38,25 +58,23 @@ export class MinioService implements OnModuleInit {
   }
 
   async getFile(name: string) {
-    const img = await this.client.getObject('docs', name);
+    const img = await this.client.getObject('images', name);
     return img;
   }
 
-  async getExcel(name: string) {
-    const excel = await this.client.getObject('excels', name);
-    return excel;
-  }
-
-  async uploadFile(name: string, data: Buffer, size?: number) {
-    const obj = await this.client.putObject('docs', name, data, size);
-    return obj;
+  async uploadFile(name: string, data: Buffer, size = 0) {
+    if (size) {
+      return await this.client.putObject('images', name, data, size);
+    } else {
+      return await this.client.putObject('images', name, data);
+    }
   }
 
   async uploadExcel(dictionaryID: string, data: Buffer) {
     const result = { entries: [], errors: [] };
     const errors: ExcelError[] = [];
     const entries: NewEntryType[] = [];
-
+    const imagesToCreate: { context: string; imgFile: exceljs.Image }[] = [];
     //NoDescribeDescriptor
     const NoDescribeDescriptor = await this.DescriptorService.findByDescription(
       '<No descrito>',
@@ -64,83 +82,43 @@ export class MinioService implements OnModuleInit {
 
     //MapUbications
     const ubications = await this.UbicationService.findAll();
-    const MapUbications = new Map();
-    (ubications as Array<Ubication>).forEach(u => {
-      MapUbications.set(u.ubication, u.id);
-    });
+    const MapUbications = createMap(ubications, 'ubication', 'id');
     //MapClasifications
     const clasifications = await this.ClasificationService.findAll();
-    const MapClasifications = new Map();
-    (clasifications as Array<Clasification>).forEach(u => {
-      MapClasifications.set(u.clasification, u.id);
-    });
+    const MapClasifications = createMap(clasifications, 'clasification', 'id');
 
+    //Dictionary
+    const d = await this.DictionaryService.findByID(dictionaryID);
     //LemmasOfDictionary
-    const Lemmas = await this.DictionaryService.findByID(dictionaryID).then(
-      d => {
-        const lemmaList: string[] = [];
-        for (let entryIndex = 0; entryIndex < d.entries.length; entryIndex++) {
-          const entry = d.entries[entryIndex];
-          let isLemma = false;
-          for (
-            let elementIndex = 0;
-            elementIndex < entry.elements.length && !isLemma;
-            elementIndex++
-          ) {
-            const element = entry.elements[elementIndex];
-            if (element.clasification.clasification === 'Lema') {
-              isLemma = true;
-            }
-            lemmaList.push(element.element);
-          }
-        }
-        return lemmaList;
-      },
-    );
+    const Lemmas = getLemmasOfDictionary(d);
 
     //Reading Excel
     const workBook = await new exceljs.Workbook().xlsx.load(data);
 
+    //Validate excelSheets and letters dictionary
+    const sheetErrors = validateSheets(workBook.worksheets, d.letters);
+    if (sheetErrors) {
+      errors.push(...(sheetErrors as ExcelError[]));
+    }
     //Worksheets
     const workSheets = workBook.worksheets;
     workSheets.forEach(ws => {
-      let actualImg: {
-        type: 'image';
-        imageId: string;
-        range: exceljs.ImageRange;
-      } = undefined;
-      let beforeImg: {
-        type: 'image';
-        imageId: string;
-        range: exceljs.ImageRange;
-      } = undefined;
+      // let actualImg: ExcelImage = undefined;
+      // let beforeImg: ExcelImage = undefined;
+      //Images
       ws.getImages().forEach(img => {
-        actualImg = img;
-        if (actualImg && beforeImg) {
-          const actualImgInitRow = actualImg.range.tl.nativeRow;
-          const beforeImgFinalRow = beforeImg.range.br.nativeRow;
-          if (actualImgInitRow <= beforeImgFinalRow) {
-            errors.push(
-              new ExcelError(
-                'Imagen',
-                ws.name,
-                actualImgInitRow + 1,
-                'Imagen mal colocada',
-              ),
-            );
-          }
-          if (actualImgInitRow - beforeImgFinalRow > 1) {
-            errors.push(
-              new ExcelError(
-                'Imagen',
-                ws.name,
-                actualImgInitRow,
-                'Fila sin imagen',
-              ),
-            );
-          }
-        }
-        beforeImg = actualImg;
+        //Validate image positions
+        // actualImg = img;
+        // const imageValidation = validateImagePosition(
+        //   actualImg,
+        //   beforeImg,
+        //   ws.name,
+        // );
+        // if (imageValidation instanceof ExcelError) {
+        //   errors.push(imageValidation);
+        // }
+        // beforeImg = actualImg;
+
         const letter: string = ws.name;
         const initRow: number = img.range.tl.nativeRow;
         const finalRow: number = img.range.br.nativeRow;
@@ -170,10 +148,9 @@ export class MinioService implements OnModuleInit {
           if (cellValueU instanceof ExcelError) {
             errors.push(cellValueU);
           } else {
-            if (cellValueU === 'Lema') {
-              if (!Lemmas.includes(element)) {
+            if (cellValueU === 'lema') {
+              if (!Lemmas.includes('<p>' + element + '</p>')) {
                 ubication = MapUbications.get(cellValueU);
-                console.log('ubication', ubication);
               } else {
                 errors.push(
                   new ExcelError(
@@ -202,124 +179,21 @@ export class MinioService implements OnModuleInit {
           } else {
             clasification = MapClasifications.get(cellValueC);
           }
-          elements.push({
-            element,
-            ubication,
-            clasification,
-            generalDescription: {
-              conceptualDomain: NoDescribeDescriptor.id,
-              structure: NoDescribeDescriptor.id,
-              tipo: NoDescribeDescriptor.id,
-            },
-            contornoDefinition: [
-              {
-                definition: '',
-                typeOfDefinition: NoDescribeDescriptor.id,
-                argumentalSchema: NoDescribeDescriptor.id,
-                relationship: [],
-                contorno: '',
-                typeOfContorno: [],
-                positionOfContorno: [],
-                formatOfContorno: [],
-              },
-            ],
-            example: {
-              anotation: '',
-              formatOfExample: [],
-              functionOfExample: [],
-              typeOfExample: [],
-            },
-            orderLemma: {
-              criteriaOfLematization: [],
-              formalStructure: [],
-              formatOfVariant: [],
-              order: [],
-              tipographyOfVariant: [],
-              typeOfVariant: [],
-              ubicationOfContorno: NoDescribeDescriptor.id,
-            },
-            paradigmaticInfo: {
-              formOfPresentation: [],
-              position: [],
-              typeOfRelationship: NoDescribeDescriptor.id,
-            },
-            useInformation: [
-              {
-                anotation: '',
-                position: NoDescribeDescriptor.id,
-                format: NoDescribeDescriptor.id,
-                tipography: NoDescribeDescriptor.id,
-              },
-              {
-                anotation: '',
-                position: NoDescribeDescriptor.id,
-                format: NoDescribeDescriptor.id,
-                tipography: NoDescribeDescriptor.id,
-              },
-              {
-                anotation: '',
-                position: NoDescribeDescriptor.id,
-                format: NoDescribeDescriptor.id,
-                tipography: NoDescribeDescriptor.id,
-              },
-              {
-                anotation: '',
-                position: NoDescribeDescriptor.id,
-                format: NoDescribeDescriptor.id,
-                tipography: NoDescribeDescriptor.id,
-              },
-              {
-                anotation: '',
-                position: NoDescribeDescriptor.id,
-                format: NoDescribeDescriptor.id,
-                tipography: NoDescribeDescriptor.id,
-              },
-              {
-                anotation: '',
-                position: NoDescribeDescriptor.id,
-                format: NoDescribeDescriptor.id,
-                tipography: NoDescribeDescriptor.id,
-              },
-              {
-                anotation: '',
-                position: NoDescribeDescriptor.id,
-                format: NoDescribeDescriptor.id,
-                tipography: NoDescribeDescriptor.id,
-              },
-              {
-                anotation: '',
-                position: NoDescribeDescriptor.id,
-                format: NoDescribeDescriptor.id,
-                tipography: NoDescribeDescriptor.id,
-              },
-              {
-                anotation: '',
-                position: NoDescribeDescriptor.id,
-                format: NoDescribeDescriptor.id,
-                tipography: NoDescribeDescriptor.id,
-              },
-              {
-                anotation: '',
-                position: NoDescribeDescriptor.id,
-                format: NoDescribeDescriptor.id,
-                tipography: NoDescribeDescriptor.id,
-              },
-            ],
-          });
-          console.log('elementsAfterPush', elements);
+          elements.push(
+            createNewElement(
+              element,
+              ubication,
+              clasification,
+              NoDescribeDescriptor,
+            ),
+          );
         }
-
+        //Create images to create and context
         const imgFile = workBook.getImage(Number.parseInt(img.imageId));
         const imgNameMinIO =
-          elements[0].element +
-          '_' +
-          Date.now() +
-          '_' +
-          '1' +
-          '.' +
-          imgFile.extension;
+          dictionaryID + '_' + Date.now() + '_' + '1' + '.' + imgFile.extension;
+        imagesToCreate.push({ context: imgNameMinIO, imgFile });
         context.push(imgNameMinIO);
-        this.uploadFile(imgNameMinIO, imgFile.buffer as Buffer);
         const newEntry = {
           letter,
           elements,
@@ -338,16 +212,54 @@ export class MinioService implements OnModuleInit {
           ),
         );
       }
+      for (
+        let imagesToCreateIndex = 0;
+        imagesToCreateIndex < imagesToCreate.length;
+        imagesToCreateIndex++
+      ) {
+        const I = imagesToCreate[imagesToCreateIndex];
+        this.uploadFile(I.context, I.imgFile.buffer as Buffer);
+      }
     } else {
       result.errors = errors;
     }
     return result;
   }
 
+  async generateStudy(studyID: string) {
+    //Delete temp folder if exists
+    if (fs.existsSync('temp')) {
+      await del('temp');
+    }
+
+    //MapUbications
+    const ubications = await this.UbicationService.findAll();
+    const MapUbications = createMap(ubications, 'id', 'ubication');
+    //MapClasifications
+    const clasifications = await this.ClasificationService.findAll();
+    const MapClasifications = createMap(clasifications, 'id', 'clasification');
+    //MapDescriptors
+    const descriptors = await this.DescriptorService.findAll();
+    const MapDescriptors = createMap(descriptors, 'id', 'description');
+
+    //Get study
+    const study: FraseograficStudyFullPopulated = await this.FraseograficStudyService.findByIDFullPopulated(
+      studyID,
+    );
+
+    //Create folder structure
+    await createFolderStructure(study, MapUbications, this.client);
+    //Create excel
+    await writeExcel(study, MapUbications, MapClasifications, MapDescriptors);
+    //Compress folder
+    const zip = await zipDirectory(
+      `temp/${study.name}`,
+      `temp/${study.name}.zip`,
+    );
+    return fs.readFileSync(zip.path);
+  }
   async onModuleInit() {
-    const docs = await this.client.bucketExists('docs');
-    const excels = await this.client.bucketExists('excels');
-    if (!docs) await this.client.makeBucket('docs', 'sgd');
-    if (!excels) await this.client.makeBucket('excels', 'sgd');
+    const images = await this.client.bucketExists('images');
+    if (!images) await this.client.makeBucket('images', 'sgd');
   }
 }
