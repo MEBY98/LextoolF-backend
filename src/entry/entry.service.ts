@@ -3,6 +3,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Entry } from './model/entry.modelinterface';
 import { NewEntryType, EditedEntryType } from './type/entry.type';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { ElementService } from 'src/element/element.service';
 
 @Injectable()

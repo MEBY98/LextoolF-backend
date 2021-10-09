@@ -1,11 +1,12 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import mongoose, { Model, Mongoose } from 'mongoose';
+import { Model } from 'mongoose';
 import { Dictionary } from './model/dictionary.modelinterface';
 import {
   NewDictionaryType,
   EditedDictionaryType,
 } from './type/dictionary.types';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { EntryService } from 'src/entry/entry.service';
 import { NewEntryType } from 'src/entry/type/entry.type';
 

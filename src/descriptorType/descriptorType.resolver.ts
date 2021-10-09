@@ -1,4 +1,5 @@
 import { Resolver, Query, Mutation, Args } from '@nestjs/graphql';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { DescriptorTypeService } from './descriptorType.service';
 import {
   DescriptorTypeType,

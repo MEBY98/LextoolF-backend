@@ -1,0 +1,14 @@
+version: '3'
+services:
+  lextoolf:
+    image: lextoolf
+    restart: always
+    build:
+      context: .
+    environment:
+      - MINIO_ENDPOINT=${MINIO_URL}
+      - MINIO_ACCESS_KEY=${MINIO_ACCESS_KEY}
+      - MINIO_SECRET_KEY=${MINIO_SECRET_KEY}
+      - MONGO_URL=${MONGO_URL}
+    ports:
+      - 9021:10000

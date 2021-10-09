@@ -1,5 +1,5 @@
 import { InputType, ObjectType, Field, ID } from '@nestjs/graphql';
-import { EntryType, NewEntryType } from 'src/entry/type/entry.type';
+import { EntryType } from 'src/entry/type/entry.type';
 import { DictionaryInfotype } from 'src/dictionaryInfo/type/dictionaryInfo.type';
 
 @ObjectType()

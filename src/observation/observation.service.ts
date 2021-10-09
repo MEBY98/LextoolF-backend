@@ -3,9 +3,10 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Observation } from './model/observation.modelinterface';
 import { NewObservationType } from './type/observation.types.dto';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { DescriptorTypeService } from 'src/descriptorType/descriptorType.service';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { DescriptorService } from 'src/descriptor/descriptor.service';
-import { DescriptorTypeType } from 'src/descriptorType/type/descriptorType.types.dto';
 
 @Injectable()
 export class ObservationService {

@@ -9,6 +9,14 @@ export class Clasificationtype {
 }
 
 @InputType()
+export class EditedClasificationType {
+  @Field(() => ID)
+  id: string;
+  @Field()
+  clasification: string;
+}
+
+@InputType()
 export class NewClasificationtype {
   @Field()
   clasification: string;

@@ -11,6 +11,8 @@ import {
 import { FileInterceptor } from '@nestjs/platform-express';
 import { Response } from 'express';
 import { MinioService } from './minio.service';
+import path from 'path';
+import fs from 'fs';
 
 @Controller('files')
 export class MinioController {
@@ -19,8 +21,21 @@ export class MinioController {
   @Get('/:name')
   async getFile(@Param('name') name: string, @Res() res: Response) {
     const result = (await this.service.getFile(name)).pipe(res);
-    console.log('controller:', result);
     return result;
+  }
+
+  @Get('/generateStudy/:studyID')
+  async getStudy(@Param('studyID') studyID: string, @Res() res: Response) {
+    const zipBuffer = await this.service.generateStudy(studyID);
+    res.setHeader('Access-Control-Expose-Headers', 'Content-Disposition');
+    res.setHeader(
+      'Content-Disposition',
+      `attachment; filename="Estudio Exportado.zip"`,
+    );
+    res.setHeader('Content-Type', 'application/zip');
+    res.setHeader('Content-Length', `${zipBuffer.byteLength}`);
+    res.send(zipBuffer);
+    return res;
   }
 
   @Post('/:name')
@@ -30,9 +45,6 @@ export class MinioController {
     @Body() body,
     @UploadedFile() file: Express.Multer.File,
   ) {
-    console.log('name', name);
-    console.log('file', file);
-    console.log('body', body);
     // const lastDot = file.originalname.lastIndexOf('.');
     // const extension = file.originalname.substring(lastDot + 1);
     return this.service.uploadFile(name, file.buffer, file.size);
@@ -47,6 +59,7 @@ export class MinioController {
   ) {
     // const lastDot = file.originalname.lastIndexOf('.');
     // const extension = file.originalname.substring(lastDot + 1);
+    console.log('file', file);
     return this.service.uploadExcel(dictionaryID, file.buffer);
   }
 }

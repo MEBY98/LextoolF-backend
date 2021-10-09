@@ -7,6 +7,7 @@ import { DescriptorModule } from 'src/descriptor/descriptor.module';
 import { ClasificationModule } from 'src/clasification/clasification.module';
 import { UbicationModule } from 'src/ubication/ubication.module';
 import { DictionaryModule } from 'src/dictionary/dictionary.module';
+import { FraseograficStudyModule } from 'src/fraseograficStudy/fraseograficStudy.module';
 
 @Module({
   imports: [
@@ -17,6 +18,7 @@ import { DictionaryModule } from 'src/dictionary/dictionary.module';
     DescriptorModule,
     ClasificationModule,
     UbicationModule,
+    FraseograficStudyModule,
   ],
   controllers: [MinioController],
   providers: [MinioService],

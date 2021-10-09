@@ -21,7 +21,7 @@ export class DescriptorService {
         return e;
       });
   }
-  findByDescription(description: string) {
+  async findByDescription(description: string) {
     return this.DescriptorModel.findOne({ description: description })
       .exec()
       .then(d => d)

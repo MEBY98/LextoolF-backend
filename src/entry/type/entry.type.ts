@@ -1,6 +1,5 @@
 import { InputType, ObjectType, Field, ID } from '@nestjs/graphql';
 import {
-  ElementType,
   ElementToEditType,
   NewElementType,
   EditedElementType,

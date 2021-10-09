@@ -1,5 +1,4 @@
 import mongoose from 'mongoose';
-import { toObjectId, toObjectIds } from '../../utils/utils';
 
 export const ElementSchema = new mongoose.Schema({
   element: {

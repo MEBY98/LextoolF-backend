@@ -9,25 +9,25 @@ import {
 
 @Resolver()
 export class AuthorResolver {
-  constructor(private readonly AuthorService: AuthorService) {}
+  constructor(private readonly authorService: AuthorService) {}
 
   @Query(() => [Authortype])
   getAllAuthors() {
-    return this.AuthorService.findAll();
+    return this.authorService.findAll();
   }
 
   @Query(() => AuthorToEditType)
   getAuthorById(@Args('id') id: string) {
-    return this.AuthorService.findById(id);
+    return this.authorService.findById(id);
   }
 
   @Mutation(() => Authortype)
   createAuthor(@Args('newAuthor') newAuthor: NewAuthortype) {
-    return this.AuthorService.create(newAuthor);
+    return this.authorService.create(newAuthor);
   }
 
   @Mutation(() => Authortype)
   editAuthor(@Args('editedAuthor') editedAuthor: EditedAuthorType) {
-    return this.AuthorService.edit(editedAuthor);
+    return this.authorService.edit(editedAuthor);
   }
 }

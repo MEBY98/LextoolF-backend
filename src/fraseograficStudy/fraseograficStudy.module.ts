@@ -13,5 +13,6 @@ import { DictionaryModule } from 'src/dictionary/dictionary.module';
     DictionaryModule,
   ],
   providers: [FraseograficStudyService, FraseograficStudyResolver],
+  exports: [FraseograficStudyService, FraseograficStudyResolver],
 })
 export class FraseograficStudyModule {}

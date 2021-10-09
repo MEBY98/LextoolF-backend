@@ -1,9 +1,8 @@
 import { Resolver, Query, Mutation, Args } from '@nestjs/graphql';
-import { DictionaryType, NewDictionaryType } from './type/dictionary.types';
+import { DictionaryType } from './type/dictionary.types';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { DictionaryService } from './dictionary.service';
 import { EntryType, NewEntryType } from 'src/entry/type/entry.type';
-import { UseInterceptors, UploadedFile } from '@nestjs/common';
-import { FileInterceptor } from '@nestjs/platform-express';
 
 @Resolver()
 export class DictionaryResolver {

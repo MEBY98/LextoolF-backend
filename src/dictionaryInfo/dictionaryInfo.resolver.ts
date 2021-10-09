@@ -1,4 +1,5 @@
 import { Resolver, Query, Mutation, Args } from '@nestjs/graphql';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { DictionaryInfoService } from './dictionaryInfo.service';
 import {
   DictionaryInfotype,

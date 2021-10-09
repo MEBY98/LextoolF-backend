@@ -3,16 +3,118 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Element } from './model/element.modelinterface';
 import { NewElementType, EditedElementType } from './type/element.type';
+import { ClasificationService } from 'src/clasification/clasification.service';
 
 @Injectable()
 export class ElementService {
   constructor(
     @InjectModel('Element')
     private ElementModel: Model<Element>,
+    private clasificationService: ClasificationService,
   ) {}
 
-  findAll() {
-    return this.ElementModel.find()
+  async findAll() {
+    const UF_ID = await this.clasificationService.findByClasification('UF');
+    return this.ElementModel.find({ clasification: UF_ID })
+      .populate({ path: 'clasification', model: 'Clasification' })
+      .populate({ path: 'ubication', model: 'Ubication' })
+      .populate({ path: 'generalDescription.tipo', model: 'Descriptor' })
+      .populate({
+        path: 'generalDescription.structure',
+        model: 'Descriptor',
+      })
+      .populate({
+        path: 'generalDescription.conceptualDomain',
+        model: 'Descriptor',
+      })
+      .populate({
+        path: 'orderLemma.order',
+        model: 'Descriptor',
+      })
+      .populate({
+        path: 'orderLemma.criteriaOfLematization',
+        model: 'Descriptor',
+      })
+      .populate({
+        path: 'orderLemma.formalStructure',
+        model: 'Descriptor',
+      })
+      .populate({
+        path: 'orderLemma.UbicationOfContorno',
+        model: 'Descriptor',
+      })
+      .populate({
+        path: 'orderLemma.TypeOfVariant',
+        model: 'Descriptor',
+      })
+      .populate({
+        path: 'orderLemma.formatOfVariant',
+        model: 'Descriptor',
+      })
+      .populate({
+        path: 'orderLemma.tipographyOfVariant',
+        model: 'Descriptor',
+      })
+      .populate({
+        path: 'useInformation.position',
+        model: 'Descriptor',
+      })
+      .populate({
+        path: 'useInformation.format',
+        model: 'Descriptor',
+      })
+      .populate({
+        path: 'useInformation.tipography',
+        model: 'Descriptor',
+      })
+      .populate({
+        path: 'contornoDefinition.typeOfDefinition',
+        model: 'Descriptor',
+      })
+      .populate({
+        path: 'contornoDefinition.argumentalSchema',
+        model: 'Descriptor',
+      })
+      .populate({
+        path: 'contornoDefinition.relationship',
+        model: 'Descriptor',
+      })
+      .populate({
+        path: 'contornoDefinition.typeOfContorno',
+        model: 'Descriptor',
+      })
+      .populate({
+        path: 'contornoDefinition.positionOfContorno',
+        model: 'Descriptor',
+      })
+      .populate({
+        path: 'contornoDefinition.formatOfContorno',
+        model: 'Descriptor',
+      })
+      .populate({
+        path: 'example.typeOfExample',
+        model: 'Descriptor',
+      })
+      .populate({
+        path: 'example.formatOfExample',
+        model: 'Descriptor',
+      })
+      .populate({
+        path: 'example.functionOfExample',
+        model: 'Descriptor',
+      })
+      .populate({
+        path: 'paradigmaticInfo.typeOfRelationship',
+        model: 'Descriptor',
+      })
+      .populate({
+        path: 'paradigmaticInfo.formOfPresentation',
+        model: 'Descriptor',
+      })
+      .populate({
+        path: 'paradigmaticInfo.position',
+        model: 'Descriptor',
+      })
       .exec()
       .then(allElements => allElements)
       .catch(e => {

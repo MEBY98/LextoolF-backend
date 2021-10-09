@@ -2,10 +2,8 @@ import { Injectable, Logger } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { DescriptorType } from './model/descriptorType.modelinterface';
-import {
-  NewDescriptorTypeType,
-  DescriptorTypeType,
-} from './type/descriptorType.types.dto';
+import { NewDescriptorTypeType } from './type/descriptorType.types.dto';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { DescriptorService } from 'src/descriptor/descriptor.service';
 import { NewDescriptorType } from 'src/descriptor/type/descriptor.types.dto';
 
