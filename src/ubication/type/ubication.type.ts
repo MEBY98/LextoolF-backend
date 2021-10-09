@@ -9,6 +9,14 @@ export class Ubicationtype {
 }
 
 @InputType()
+export class EditedUbicationType {
+  @Field(() => ID)
+  id: string;
+  @Field(() => String)
+  ubication: string;
+}
+
+@InputType()
 export class NewUbicationtype {
   @Field(() => String)
   ubication: string;
