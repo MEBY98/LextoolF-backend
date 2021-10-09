@@ -1,4 +1,3 @@
-import { MongoClient } from 'mongodb';
 import { Logger } from '@nestjs/common';
 import { Collection } from 'mongoose';
 import mongoose from 'mongoose';
@@ -27,6 +26,11 @@ export const getCollection = async (
     });
 };
 
+export const dropIndexesOfCollection = (collectionName: string) => {
+  getCollection(collectionName).then(coll => {
+    coll.dropIndexes();
+  });
+};
 export const insertDescriptor = async (
   collectionName: string,
   description: string,
@@ -34,7 +38,7 @@ export const insertDescriptor = async (
   return getCollection(collectionName).then(coll => {
     if (coll) {
       return coll.insertOne({ description: description }).then(insertedDoc => {
-        return insertedDoc.ops;
+        return insertedDoc.insertedId;
       });
     } else {
       throw new Error('No existe la coleccion');
@@ -48,8 +52,8 @@ export const insertManyDescriptors = async (
   const ids: mongoose.Types.ObjectId[] = [];
   for (let i = 0; i < descriptors.length; i++) {
     const d = descriptors[i];
-    const ops = await insertDescriptor(collectionName, d);
-    ids.push(ops[0]._id);
+    const id = await insertDescriptor(collectionName, d);
+    ids.push(id);
   }
   return ids;
 };
@@ -58,7 +62,7 @@ export const insertDocument = async (collectionName: string, doc: any) => {
   return getCollection(collectionName).then(coll => {
     if (coll) {
       return coll.insertOne(doc).then(insertedDoc => {
-        return insertedDoc.ops;
+        return insertedDoc.insertedId;
       });
     } else {
       throw new Error('No existe la coleccion');
@@ -73,8 +77,8 @@ export const insertManyDocuments = async (
   const ids: mongoose.Types.ObjectId[] = [];
   for (let i = 0; i < docs.length; i++) {
     const d = docs[i];
-    const ops = await insertDocument(collectionName, d);
-    ids.push(ops[0]._id);
+    const id = await insertDocument(collectionName, d);
+    ids.push(id);
   }
   return ids;
 };

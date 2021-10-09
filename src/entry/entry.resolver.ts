@@ -1,11 +1,7 @@
 import { Resolver, Query, Mutation, Args } from '@nestjs/graphql';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { EntryService } from './entry.service';
-import {
-  EntryType,
-  NewEntryType,
-  EntryToEditType,
-  EditedEntryType,
-} from './type/entry.type';
+import { EntryType, EntryToEditType, EditedEntryType } from './type/entry.type';
 
 @Resolver()
 export class EntryResolver {

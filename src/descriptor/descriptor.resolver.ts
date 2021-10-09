@@ -1,7 +1,6 @@
 import { Resolver, Query, Mutation, Args } from '@nestjs/graphql';
 import {
   DescriptorType,
-  NewDescriptorType,
   DescriptorInputType,
 } from './type/descriptor.types.dto';
 import { DescriptorService } from './descriptor.service';

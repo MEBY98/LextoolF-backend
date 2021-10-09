@@ -1,4 +1,5 @@
 import { Resolver, Query, Mutation, Args } from '@nestjs/graphql';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { ElementService } from './element.service';
 import { ElementType, NewElementType } from './type/element.type';
 import { Ubicationtype } from 'src/ubication/type/ubication.type';

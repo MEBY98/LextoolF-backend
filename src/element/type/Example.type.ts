@@ -1,4 +1,4 @@
-import { InputType, ObjectType, Field, ID } from '@nestjs/graphql';
+import { InputType, ObjectType, Field } from '@nestjs/graphql';
 import { DescriptorType } from 'src/descriptor/type/descriptor.types.dto';
 
 @ObjectType()

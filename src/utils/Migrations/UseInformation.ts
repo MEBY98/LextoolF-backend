@@ -1,4 +1,3 @@
-import { insertDocument, insertManyDescriptors } from './mongoDbUtils';
 import mongoose from 'mongoose';
 
 //Informacion de uso
@@ -23,7 +22,7 @@ export const UseInformationDiafasica = {
   descriptorsTypes: new Array<mongoose.Types.ObjectId>(),
 };
 export const UseInformationDiatrastica = {
-  name: 'Diatrástica',
+  name: 'Diastrática',
   tab: 'UseInformation',
   descriptorsTypes: new Array<mongoose.Types.ObjectId>(),
 };
@@ -55,7 +54,7 @@ export const UseInformationN = {
 
 export const UseInformationDescriptorTypes = [
   {
-    name: 'Anotación',
+    name: 'Anotación del lexicógrafo',
     inputType: 'text',
     tab: 'UseInformation',
     multiInput: false,
