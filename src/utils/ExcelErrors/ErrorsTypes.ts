@@ -3,7 +3,8 @@ type ErrorType =
   | 'Valor no válido'
   | 'Imagen mal colocada'
   | 'Fila sin imagen'
-  | 'Elemento existente';
+  | 'Elemento existente'
+  | 'No existe la letra en el diccionario';
 
 export class ExcelError {
   element: string;
