@@ -5,10 +5,12 @@ services:
     restart: always
     build:
       context: .
+    network_mode: bridge
     environment:
       - MINIO_ENDPOINT=${MINIO_URL}
       - MINIO_ACCESS_KEY=${MINIO_ACCESS_KEY}
       - MINIO_SECRET_KEY=${MINIO_SECRET_KEY}
+      - MINIO_PORT=${MINIO_PORT}
       - MONGO_URL=${MONGO_URL}
     ports:
       - 9021:10000
