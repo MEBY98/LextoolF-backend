@@ -16,7 +16,6 @@ import { ExcelError } from 'src/utils/ExcelErrors/ErrorsTypes';
 import { validateExcelValue } from 'src/utils/ExcelErrors/ValidateValue';
 import { NewEntryType } from 'src/entry/type/entry.type';
 import { NewElementType } from 'src/element/type/element.type';
-import { ConfigService } from '@nestjs/config';
 // import { Response } from 'express';
 // import { Descriptor } from 'src/descriptor/model/descriptor.modelinterface';
 import { zipDirectory, createMap } from 'src/utils/utils';
@@ -41,7 +40,6 @@ export class MinioService implements OnModuleInit {
   private client: Client;
 
   constructor(
-    private readonly configService: ConfigService,
     private readonly FraseograficStudyService: FraseograficStudyService,
     private readonly DictionaryService: DictionaryService,
     private readonly DescriptorService: DescriptorService,
@@ -49,11 +47,11 @@ export class MinioService implements OnModuleInit {
     private readonly ClasificationService: ClasificationService,
   ) {
     this.client = new Client({
-      endPoint: configService.get<string>('MINIO_ENDPOINT'),
-      port: parseInt(configService.get<string>('MINIO_PORT')),
+      endPoint: process.env.MINIO_ENDPOINT.toString(),
+      port: parseInt(process.env.MINIO_PORT),
       useSSL: false,
-      accessKey: configService.get<string>('MINIO_ACCESS_KEY'),
-      secretKey: configService.get<string>('MINIO_SECRET_KEY'),
+      accessKey: process.env.MINIO_ACCESS_KEY.toString(),
+      secretKey: process.env.MINIO_SECRET_KEY.toString(),
     });
   }
 
@@ -102,11 +100,11 @@ export class MinioService implements OnModuleInit {
     }
     //Worksheets
     const workSheets = workBook.worksheets;
-    workSheets.forEach(ws => {
+    workSheets.forEach((ws) => {
       // let actualImg: ExcelImage = undefined;
       // let beforeImg: ExcelImage = undefined;
       //Images
-      ws.getImages().forEach(img => {
+      ws.getImages().forEach((img) => {
         //Validate image positions
         // actualImg = img;
         // const imageValidation = validateImagePosition(

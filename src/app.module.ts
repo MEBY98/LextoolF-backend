@@ -5,16 +5,16 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { MinioModule } from './minIO/minio.module';
 import { DescriptorTypeModule } from './descriptorType/descriptorType.module';
 import { ObservationModule } from './observation/observation.module';
-import { ConfigModule, ConfigService } from '@nestjs/config';
+import { ConfigurationModule } from 'configuration/Configuration.module';
+import { ConfigurationService } from 'configuration/Configuration.service';
 
 @Module({
   imports: [
-    ConfigModule.forRoot({ isGlobal: true }),
     MongooseModule.forRootAsync({
-      imports: [ConfigModule],
-      inject: [ConfigService],
-      useFactory: (config: ConfigService) => ({
-        uri: config.get<string>('MONGO_URL'),
+      imports: [ConfigurationModule],
+      inject: [ConfigurationService],
+      useFactory: (config: ConfigurationService) => ({
+        uri: config.getMongoURL(),
         useNewUrlParser: true,
         useFindAndModify: false,
         useUnifiedTopology: true,
@@ -28,4 +28,4 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
     ObservationModule,
   ],
 })
-export class AppModule { }
+export class AppModule {}
