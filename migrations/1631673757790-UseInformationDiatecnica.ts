@@ -37,7 +37,7 @@ export const up = async () => {
     dt.descriptors = descriptorsIDs;
     const ops = await insertDocument('descriptortypes', dt);
     console.log('descriptorsTypesIDs', descriptorsTypesIDs);
-    descriptorsTypesIDs.push(ops[0]._id);
+    descriptorsTypesIDs.push(ops);
   }
   UseInformationDiatecnica.descriptorsTypes = descriptorsTypesIDs;
   await insertDocument('observations', UseInformationDiatecnica);

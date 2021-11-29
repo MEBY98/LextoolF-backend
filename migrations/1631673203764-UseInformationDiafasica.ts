@@ -13,14 +13,14 @@ import mongoose from 'mongoose';
 
 export const up = async () => {
   const descriptorsTypesIDs: mongoose.Types.ObjectId[] = [];
-  let ops = [];
+  let ops;
   let descriptorsIDs: mongoose.Types.ObjectId[] = [];
   UseInformationDescriptorTypes[0].descriptors = [];
   ops = await insertDocument(
     'descriptortypes',
     UseInformationDescriptorTypes[0],
   );
-  descriptorsTypesIDs.push(ops[0]._id);
+  descriptorsTypesIDs.push(ops);
 
   descriptorsIDs = await insertManyDescriptors(
     'descriptors',
@@ -31,7 +31,7 @@ export const up = async () => {
     'descriptortypes',
     UseInformationDescriptorTypes[1],
   );
-  descriptorsTypesIDs.push(ops[0]._id);
+  descriptorsTypesIDs.push(ops);
 
   descriptorsIDs = await insertManyDescriptors(
     'descriptors',
@@ -42,7 +42,7 @@ export const up = async () => {
     'descriptortypes',
     UseInformationDescriptorTypes[2],
   );
-  descriptorsTypesIDs.push(ops[0]._id);
+  descriptorsTypesIDs.push(ops);
 
   descriptorsIDs = await insertManyDescriptors(
     'descriptors',
@@ -53,7 +53,7 @@ export const up = async () => {
     'descriptortypes',
     UseInformationDescriptorTypes[3],
   );
-  descriptorsTypesIDs.push(ops[0]._id);
+  descriptorsTypesIDs.push(ops);
 
   UseInformationDiafasica.descriptorsTypes = descriptorsTypesIDs;
   await insertDocument('observations', UseInformationDiafasica);

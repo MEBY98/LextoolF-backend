@@ -15,7 +15,7 @@ const createObservation = async (
   );
   descriptorType.descriptors = descriptorsIDs;
   const ops = await insertDocument('descriptortypes', descriptorType);
-  const descriptorTypeID = ops[0]._id;
+  const descriptorTypeID = ops;
   observation.descriptorsTypes.push(descriptorTypeID);
   insertDocument('observations', observation);
 };
